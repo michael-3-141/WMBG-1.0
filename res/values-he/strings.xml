@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Perlib</string>
+    <string name="addbook">הוסף ספר</string>
+    <string name="bookname">שם הספר</string>
+    <string name="authorName">שם המחבר</string>
+    <string name="lendedTo">…מושאל ל</string>
+    <string name="editBook">עדכן</string>
+    <string name="deleteConfirm">האם אתה בטוח שאתה רוצה למחוק את </string>
+    <string name="deleteConfirmTitle">אישור מחיקה</string>
+    <string name="deleteYes">כן</string>
+    <string name="deleteCancel">ביטול</string>
+    <string name="isbnCode">קוד מסת"ב</string>
+    <string name="getBookData">הורד נתוני ספר</string>
+    <string name="lendedToDisplay">מושאל ל:</string>
+    <string name="by">מחבר: </string>
+    <string name="InvalidISBN">קוד המסת"ב שהוקש אינו חוקי או לא נמצא.</string>
+    <string name="noConnection">אינך מחובר לאנטרנט. אנא ודא שאתה מחובר ונסה שוב.</string>
+    <string name="scanIsbnBarcode">סרוק קוד מסת"ב</string>
+    <string name="email">דוא"ל של שואל הספר (רשות)</string>
+    <string-array name="options_array">
+        <item >מחק</item>
+        <item >שלח תזכורת</item>
+    </string-array>
+    <string name="options">אפשרויות</string>
+    <string name="emailSubject">תזכורת ספר מושאל</string>
+    <string name="emailBodyA">שלום, ברשותך הספר "</string>
+    <string name="emailBodyB">&quot; שלי. אנא החזר אותו.</string>
+    <string name="sendEmail">שלח דואל</string>
+
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Perlib</string>
+    <string name="addbook">Add New Book</string>
+    <string name="bookname">Book Name</string>
+    <string name="authorName">Author Name</string>
+    <string name="lendedTo">Lended To&#8230;</string>
+    <string name="editBook">Edit</string>
+    <string name="deleteConfirm">Are you sure you want to delete </string>
+    <string name="deleteConfirmTitle">Delete Confirmation</string>
+    <string name="deleteYes">Yes</string>
+    <string name="deleteCancel">Cancel</string>
+    <string name="isbnCode">ISBN Code</string>
+    <string name="getBookData">Get Book Data</string>
+    <string name="lendedToDisplay">Lended To: </string>
+    <string name="by">By: </string>
+    <string name="InvalidISBN">The ISBN code you entered was invalid or wasn\'t found in the database.</string>
+    <string name="noConnection">You are not connected to the internet. Please verify that you are connected and try again.</string>
+    <string name="scanIsbnBarcode">Scan ISBN Barcode</string>
+    <string name="email">Lended To Email (Optional)</string>
+    <string-array name="options_array">
+        <item >Delete</item>
+        <item >Send Reminder</item>
+    </string-array>
+    <string name="options">Options</string>
+    <string name="emailSubject">Lended Book Reminder</string>
+    <string name="emailBodyA">Hi, you have my book: \&quot;</string>
+    <string name="emailBodyB">\&quot;, could you please return it?</string>
+    <string name="sendEmail">Send Email&#8230;</string>
+
+</resources>

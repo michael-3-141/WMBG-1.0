@@ -1,0 +1,4 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/addbook" android:title="@string/addbook" android:showAsAction="ifRoom"></item>
+
+</menu>
