@@ -69,8 +69,8 @@ public class AddBook extends Activity implements OnDownloadComplete {
 	    etEmail = (EditText)findViewById(R.id.etEmail);
 	    activity = this;
 	    final IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-	    nameValueArr = (ArrayList<String>) Library.readContactData(Library.MODE_GET_NAMES, getBaseContext());
-	    contacts = (Map<Integer, List<String>>) Library.readContactData(Library.MODE_GET_ALL, getBaseContext());
+	    nameValueArr = (ArrayList<String>) Library.readContactData(Library.MODE_GET_NAMES, getContentResolver());
+	    contacts = (Map<Integer, List<String>>) Library.readContactData(Library.MODE_GET_ALL, getContentResolver());
 	    
 	    //String[] contacts = getContacts();
 	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nameValueArr);
@@ -142,10 +142,13 @@ public class AddBook extends Activity implements OnDownloadComplete {
 				for(Entry<Integer, List<String>> row : contacts.entrySet())
 				{
 					selectedName = row.getValue().get(0);
-					if(selectedName.equals(name))
+					if(selectedName != null)
 					{
-						etEmail.setText(row.getValue().get(1));
-						break;
+						if(selectedName.equals(name))
+						{
+							etEmail.setText(row.getValue().get(1));
+							break;
+						}
 					}
 				}
 			}

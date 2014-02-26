@@ -51,18 +51,13 @@ public class Library {
 	}
 	
 	@SuppressLint("UseSparseArrays")
-	public static Object readContactData(int mode, Context cx) {
-		
-        
-        try {
-             
-        	
+	public static Object readContactData(int mode, ContentResolver cr) {
+		try{
         	List<String> names = new ArrayList<String>();
         	Map<Integer, String> emails = new HashMap<Integer, String>();
         	Map <Integer, List<String>> contacts = new HashMap<Integer, List<String>>();
             /*********** Reading Contacts Name **********/
-             
-            ContentResolver cr = cx.getContentResolver();
+
              
             //Query to get contact name
              
@@ -72,7 +67,6 @@ public class Library {
                             null,
                             null,
                             null);
-            
             // If data data found in contacts 
             if (cur.getCount() > 0) {
                 
@@ -84,7 +78,6 @@ public class Library {
                  
                 while (cur.moveToNext()) 
                 {
-                	
                     name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                     id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
                     String email = "";
@@ -93,14 +86,18 @@ public class Library {
 						names.add(name.toString());
                     }
                     Cursor cur1 = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", new String[]{id}, null);
-                    while(cur1.moveToNext())
+                    if(cur1.getCount()>0)
                     {
-                    	email = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
-                    	if(email != null)
-                    	{
-							emails.put(Integer.parseInt(id), email);
-                    	}
+	                    while(cur1.moveToNext())
+	                    {
+	                    	email = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+	                    	if(email != null)
+	                    	{
+								emails.put(Integer.parseInt(id), email);
+	                    	}
+	                    }
                     }
+                    cur1.close();
                     List<String> line = new ArrayList<String>();
                     line.add(name);
                     line.add(email);
@@ -126,10 +123,9 @@ public class Library {
             {
             	return contacts;
             }
-                     
-        } catch (NullPointerException e) {
-            Log.i("AutocompleteContacts","Exception : "+ e);
-        }
+	    } catch (NullPointerException e) {
+	        Log.i("AutocompleteContacts","Exception : "+ e);
+	    }
         return null;
    }
 }
