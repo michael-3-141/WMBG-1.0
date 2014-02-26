@@ -34,12 +34,14 @@ import android.widget.SimpleAdapter;
 
 import com.elgavi.michael.perlib.book.Book;
 import com.elgavi.michael.perlib.book.Library;
+import com.elgavi.michael.perlib.book.Settings;
 import com.google.gson.Gson;
 
 public class MainActivity extends Activity {
 
 	//Book[] items = new Book[]{};
 	List<Book> items = new ArrayList<Book>(); 
+	Settings settings;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,6 +50,7 @@ public class MainActivity extends Activity {
 		final ListView bookList = (ListView)findViewById(R.id.bookList);
 		
 		loadData();
+		settings = Library.loadSettings(getApplicationContext());
 		
 		if(getIntent().getExtras() != null)
 		{
@@ -78,7 +81,7 @@ public class MainActivity extends Activity {
 							uriText =
 							"mailto:"+items.get(position).getEmail() + 
 							"?subject=" + Uri.encode(getString(R.string.emailSubject), "UTF-8") + 
-							"&body=" + Uri.encode(getString(R.string.emailBodyA) + items.get(position).getName() + getString(R.string.emailBodyB), "UTF-8");
+							"&body=" + Uri.encode(settings.getEmailMessage().replaceAll("@book@", items.get(position).getName()));
 							Uri uri = Uri.parse(uriText);
 					        Intent myActivity2 = new Intent(Intent.ACTION_SENDTO);                              
 					        myActivity2.setData(uri);
@@ -126,12 +129,21 @@ public class MainActivity extends Activity {
 			case R.id.addbook:
 				goto_newbook();
 				return true;
+			case R.id.settings:
+				goto_settings();
+				return true;
 			default:
 				return false;
 		
 		}
 	}
 	
+
+	private void goto_settings() {
+		Intent settings = new Intent(getApplicationContext(), Settings.class);
+		startActivity(settings);
+		
+	}
 
 	private void goto_newbook() {
 		

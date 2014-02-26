@@ -28,5 +28,6 @@
     <string name="emailBodyA">שלום, ברשותך הספר "</string>
     <string name="emailBodyB">&quot; שלי. אנא החזר אותו.</string>
     <string name="sendEmail">שלח דואל</string>
+    <string name="settings">הגדרות</string>
 
 </resources>

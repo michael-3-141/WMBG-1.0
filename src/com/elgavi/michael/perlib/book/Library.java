@@ -1,7 +1,10 @@
 package com.elgavi.michael.perlib.book;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,6 +43,30 @@ public class Library {
 				bookArray = list.toArray(bookArray);
 				Gson gson = new Gson();
 				String json = gson.toJson(bookArray);
+				//Log.d("json", json);
+				bw.write(json+eol);
+				bw.close();
+				
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void saveSettings(Settings settings)
+	{
+		String eol = System.getProperty("line.separator");
+		File externalStorage = Environment.getExternalStorageDirectory();
+		if(externalStorage.canWrite())
+		{
+			File bookList = new File(externalStorage,"settings.txt");
+			try {
+				FileWriter fw = new FileWriter(bookList);
+				BufferedWriter bw = new BufferedWriter(fw);
+				Gson gson = new Gson();
+				String json = gson.toJson(settings);
 				//Log.d("json", json);
 				bw.write(json+eol);
 				bw.close();
@@ -122,4 +149,34 @@ public class Library {
 	    }
         return null;
    }
+	
+	public static Settings loadSettings(Context cx)
+	{
+		//String eol = System.getProperty("line.separator");
+		String fs = System.getProperty("file.separator");
+		File sd = Environment.getExternalStorageDirectory();
+		File listfile = new File(sd+fs+"settings.txt");
+		Settings settings = new Settings(cx);
+		if(listfile.exists())
+		{
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(listfile));
+				
+				String line;
+				Gson gson = new Gson();
+				while((line = br.readLine()) != null)
+				{
+					settings = gson.fromJson(line, Settings.class);
+				}
+				br.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return settings;
+	}
 }
