@@ -49,8 +49,9 @@ public class EditBook extends Activity {
 	    etbookname.setText(editedItem.getName());
 	    etBookAuthor.setText(editedItem.getAuthor());
 	    etLendedTo.setText(editedItem.getLendedTo());
-	    contacts = (Map<Integer, List<String>>) Library.readContactData(Library.MODE_GET_ALL, getContentResolver());
-	    autoNames = (List<String>) Library.readContactData(Library.MODE_GET_NAMES, getContentResolver());
+	    Object[] contactsArray = Library.readContactData(getContentResolver());
+	    autoNames = (ArrayList<String>)contactsArray[0];
+	    contacts = (Map<Integer, List<String>>)contactsArray[1];
 	    
 	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, autoNames);
 	    etLendedTo.setAdapter(adapter);

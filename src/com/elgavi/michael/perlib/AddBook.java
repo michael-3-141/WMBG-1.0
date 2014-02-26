@@ -69,8 +69,9 @@ public class AddBook extends Activity implements OnDownloadComplete {
 	    etEmail = (EditText)findViewById(R.id.etEmail);
 	    activity = this;
 	    final IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-	    nameValueArr = (ArrayList<String>) Library.readContactData(Library.MODE_GET_NAMES, getContentResolver());
-	    contacts = (Map<Integer, List<String>>) Library.readContactData(Library.MODE_GET_ALL, getContentResolver());
+	    Object[] contactsArray = Library.readContactData(getContentResolver());
+	    nameValueArr = (ArrayList<String>)contactsArray[0];
+	    contacts = (Map<Integer, List<String>>)contactsArray[1];
 	    
 	    //String[] contacts = getContacts();
 	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nameValueArr);

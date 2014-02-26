@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.database.Cursor;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.util.Log;
+
 import com.google.gson.Gson;
 
 public class Library {
@@ -51,7 +53,7 @@ public class Library {
 	}
 	
 	@SuppressLint("UseSparseArrays")
-	public static Object readContactData(int mode, ContentResolver cr) {
+	public static Object[] readContactData(ContentResolver cr) {
 		try{
         	List<String> names = new ArrayList<String>();
         	Map<Integer, String> emails = new HashMap<Integer, String>();
@@ -111,18 +113,10 @@ public class Library {
             }
             cur.close();
             
-            if(mode == MODE_GET_NAMES)
-            {
-            	return names;
-            }
-            else if(mode == MODE_GET_EMAILS)
-            {
-            	return emails;
-            }
-            else if(mode == MODE_GET_ALL)
-            {
-            	return contacts;
-            }
+            Object[] results = new Object[3];
+            results[0] = names;
+            results[1] = contacts;
+            results[2] = emails;
 	    } catch (NullPointerException e) {
 	        Log.i("AutocompleteContacts","Exception : "+ e);
 	    }
