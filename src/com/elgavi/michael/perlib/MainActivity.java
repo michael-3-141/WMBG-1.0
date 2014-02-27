@@ -29,23 +29,31 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import com.elgavi.michael.perlib.book.Book;
+import com.elgavi.michael.perlib.book.BookJsonAdapter;
 import com.elgavi.michael.perlib.book.Library;
 import com.elgavi.michael.perlib.book.Settings;
 import com.google.gson.Gson;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnDownloadComplete{
 
 	//Book[] items = new Book[]{};
 	List<Book> items = new ArrayList<Book>(); 
 	Settings settings;
+	DownloadInfo downloader;
+	private OnDownloadComplete downloadListener;
+	ListView bookList;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		final ListView bookList = (ListView)findViewById(R.id.bookList);
+		bookList = (ListView)findViewById(R.id.bookList);
+		downloadListener = this;
 		
 		loadData();
 		settings = Library.loadSettings(getApplicationContext());
@@ -56,7 +64,7 @@ public class MainActivity extends Activity {
 			items = b.getParcelableArrayList("items");
 		}
 		
-		refreshList(bookList);
+		refreshList();
 		
 		bookList.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -72,7 +80,7 @@ public class MainActivity extends Activity {
 						
 						switch(which){
 						case 0:
-							deleteItem(position, bookList);
+							deleteItem(position);
 							break;
 						case 1:
 							String uriText = null;
@@ -130,12 +138,41 @@ public class MainActivity extends Activity {
 			case R.id.settings:
 				goto_settings();
 				return true;
+			case R.id.delete:
+				deleteByScan();
+				return true;
 			default:
 				return false;
 		
 		}
 	}
 	
+
+	private void deleteByScan() {
+		IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+		scanIntegrator.initiateScan();
+		
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		
+		IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+		if (scanningResult != null) {
+			String contents = scanningResult.getContents();
+			if(contents != null)
+			{
+				if(contents.length() == 0){Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();return;}
+				if(!Library.isConnectedToInternet(getApplicationContext())){Toast.makeText(getApplicationContext(), getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
+				downloader = new DownloadInfo(downloadListener);
+				downloader.execute(contents);
+			}
+		}
+		else{
+		    Toast toast = Toast.makeText(getApplicationContext(), 
+		        "No scan data received!", Toast.LENGTH_SHORT);
+		    toast.show();
+		}
+	}
 
 	private void goto_settings() {
 		Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -195,7 +232,7 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	private void refreshList(ListView bookList)
+	private void refreshList()
 	{
 		List<Map<String,String>> displayList = new ArrayList<Map<String,String>>();
 		for(Iterator<Book> i = items.iterator(); i.hasNext(); ) {
@@ -213,7 +250,7 @@ public class MainActivity extends Activity {
 		bookList.setAdapter(adapter);
 	}
 
-	private void deleteItem(final int position, final ListView bookList)
+	private void deleteItem(final int position)
 	{
 		AlertDialog.Builder delete_builder = new AlertDialog.Builder(MainActivity.this);
 		delete_builder.setPositiveButton(getString(R.string.deleteYes) , new DialogInterface.OnClickListener() {
@@ -222,7 +259,7 @@ public class MainActivity extends Activity {
 			public void onClick(DialogInterface dialog, int which) {
 				
 				items.remove(position);
-				refreshList(bookList);
+				refreshList();
 				Library.saveInfo(items);
 			}
 		});
@@ -237,5 +274,63 @@ public class MainActivity extends Activity {
 		delete_builder.setMessage(getString(R.string.deleteConfirm) + ' ' + '"' + items.get(position).getName() + '"' + "?").setTitle(getString(R.string.deleteConfirmTitle));
 		AlertDialog dialog = delete_builder.create();
 		dialog.show();
+	}
+
+	@Override
+	public void OnTaskFinished() {
+		
+		Gson gson = new Gson();
+		BookJsonAdapter adapter = gson.fromJson(downloader.getJsonResult(), BookJsonAdapter.class);
+		if(adapter == null)
+		{
+			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();
+			return;
+		}
+		Book resultBook = adapter.convertToBook();
+		if(resultBook == null)
+		{
+			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();
+			return;
+		}
+		final List<Integer> matcheIds = new ArrayList<Integer>();
+		List<Book> matches = new ArrayList<Book>();
+		List<String> matchDisplay = new ArrayList<String>();
+		int it = 0;
+		for(Iterator<Book> i = items.iterator(); i.hasNext(); )
+		{
+			Book item = i.next();
+			if(item.getName().equals(resultBook.getName()))
+			{
+				matcheIds.add(it);
+				matches.add(item);
+				matchDisplay.add("Lended To: " + item.getLendedTo());
+			}
+			it++;
+		}
+		if(matches.size() == 1)
+		{
+			deleteItem(matcheIds.get(0));
+		}
+		else if(matches.size() == 0)
+		{
+			return;
+		}
+		else
+		{
+			String[] displayArray = new String[]{};
+			displayArray = matchDisplay.toArray(displayArray);
+			AlertDialog.Builder options_builder = new AlertDialog.Builder(MainActivity.this);
+			options_builder.setTitle(getString(R.string.duplicateBooks)).setItems(displayArray, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					deleteItem(matcheIds.get(which));
+				}
+			});
+			
+			AlertDialog dialog = options_builder.create();
+			dialog.show();
+		}
 	}
 }

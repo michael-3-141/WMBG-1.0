@@ -25,8 +25,9 @@ public final class R {
     }
     public static final class drawable {
         public static final int ic_action_new=0x7f020000;
-        public static final int ic_action_settings=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
+        public static final int ic_action_remove=0x7f020001;
+        public static final int ic_action_settings=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
     }
     public static final class id {
         public static final int addbook=0x7f09000f;
@@ -36,6 +37,7 @@ public final class R {
         public static final int btnSave=0x7f09000b;
         public static final int btnScanISBN=0x7f090002;
         public static final int customMessage=0x7f09000a;
+        public static final int delete=0x7f090011;
         public static final int etAuthorName=0x7f090004;
         public static final int etBookName=0x7f090003;
         public static final int etEmail=0x7f090006;
@@ -65,10 +67,12 @@ public final class R {
         public static final int bookname=0x7f050002;
         public static final int by=0x7f05000d;
         public static final int deafultEmailMessage=0x7f050018;
+        public static final int deleteByScan=0x7f05001a;
         public static final int deleteCancel=0x7f050009;
         public static final int deleteConfirm=0x7f050006;
         public static final int deleteConfirmTitle=0x7f050007;
         public static final int deleteYes=0x7f050008;
+        public static final int duplicateBooks=0x7f05001b;
         public static final int editBook=0x7f050005;
         public static final int email=0x7f050011;
         public static final int emailBodyA=0x7f050014;

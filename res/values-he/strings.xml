@@ -29,5 +29,9 @@
     <string name="emailBodyB">&quot; שלי. אנא החזר אותו.</string>
     <string name="sendEmail">שלח דואל</string>
     <string name="settings">הגדרות</string>
+    <string name="deafultEmailMessage">הודעת אימייל: (כתוב @book@ איפה שאתה רוצה להשים את שם הספר)</string>
+    <string name="save">שמור</string>
+    <string name="deleteByScan">מחיקה ע"י סריקה</string>
+    <string name="duplicateBooks">נמצאו ספרים כפולים</string>
 
 </resources>

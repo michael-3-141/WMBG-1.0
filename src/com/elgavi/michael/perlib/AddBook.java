@@ -8,10 +8,7 @@ import java.util.Map.Entry;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -180,21 +177,6 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 		
 	}
 	
-	 public boolean isConnectedToInternet(){
-		    ConnectivityManager connectivity = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-		      if (connectivity != null) 
-		      {
-		          NetworkInfo[] info = connectivity.getAllNetworkInfo();
-		          if (info != null) 
-		              for (int i = 0; i < info.length; i++) 
-		                  if (info[i].getState() == NetworkInfo.State.CONNECTED)
-		                  {
-		                      return true;
-		                  }
-
-		      }
-		      return false;
-	}
 	 
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		
@@ -216,7 +198,7 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	private void handleISBN(String isbn)
 	{
 		if(isbn.length() == 0){Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();return;}
-		if(!isConnectedToInternet()){Toast.makeText(getApplicationContext(), getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
+		if(!Library.isConnectedToInternet(getApplicationContext())){Toast.makeText(getApplicationContext(), getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
 		downloader = new DownloadInfo(downloadListener);
 		downloader.execute(isbn);
 	}

@@ -29,5 +29,9 @@
     <string name="emailBodyB">\&quot;, could you please return it?</string>
     <string name="sendEmail">Send Email&#8230;</string>
     <string name="settings">Settings</string>
+    <string name="deafultEmailMessage">Deafult Email Message (Type @book@ for the book name):</string>
+    <string name="save">Save</string>
+    <string name="deleteByScan">Delete By Scan</string>
+    <string name="duplicateBooks">Duplicate books found</string>
 
 </resources>

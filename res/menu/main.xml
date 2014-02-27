@@ -1,5 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/addbook" android:title="@string/addbook" android:icon="@drawable/ic_action_new" android:showAsAction="ifRoom"></item>
     <item android:id="@+id/settings" android:title="@string/settings" android:icon="@drawable/ic_action_settings" android:showAsAction="ifRoom"></item>
+    <item android:id="@+id/delete" android:title="@string/deleteByScan" android:icon="@drawable/ic_action_remove" android:showAsAction="ifRoom"></item>
 
 </menu>
