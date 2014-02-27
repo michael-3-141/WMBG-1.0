@@ -8,6 +8,10 @@ public class BookJsonAdapter {
 	public Book convertToBook()
 	{
 		Book convertedBook = new Book();
+		if(data == null && error == null)
+		{
+			return null;
+		}
 		if(data.length < 1)
 		{
 			return null;

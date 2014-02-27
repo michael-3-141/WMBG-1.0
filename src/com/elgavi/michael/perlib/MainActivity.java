@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -140,7 +138,7 @@ public class MainActivity extends Activity {
 	
 
 	private void goto_settings() {
-		Intent settings = new Intent(getApplicationContext(), Settings.class);
+		Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
 		startActivity(settings);
 		
 	}

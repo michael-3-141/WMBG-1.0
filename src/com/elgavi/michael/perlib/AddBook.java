@@ -31,14 +31,16 @@ import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-public class AddBook extends Activity implements OnDownloadComplete {
+public class AddBook extends Activity implements OnDownloadComplete, OnContactLoadingComplete {
 
 	List<Book> items = new ArrayList<Book>();
-	OnDownloadComplete activity;
+	OnDownloadComplete downloadListener;
+	OnContactLoadingComplete contactsListener;
     public ArrayList<String> nameValueArr = new ArrayList<String>();
     @SuppressLint("UseSparseArrays")
 	public Map<Integer,List<String>> contacts = new HashMap<Integer, List<String>>();
 	DownloadInfo downloader;
+	GetContacts contactLoader;
     EditText etbookname;
     EditText etBookAuthor;
     AutoCompleteTextView etLendedTo;
@@ -48,9 +50,9 @@ public class AddBook extends Activity implements OnDownloadComplete {
     Button btnScanISBN;
     EditText etEmail;
 	private ArrayAdapter<String> adapter;
+	Object[] contactResults;
 	
 	/** Called when the activity is first created. */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -67,15 +69,12 @@ public class AddBook extends Activity implements OnDownloadComplete {
 	    btnDownloadInfo = (Button)findViewById(R.id.btnDownloadInfo);
 	    btnScanISBN = (Button)findViewById(R.id.btnScanISBN);
 	    etEmail = (EditText)findViewById(R.id.etEmail);
-	    activity = this;
+	    downloadListener = this;
+	    contactsListener = this;
 	    final IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-	    Object[] contactsArray = Library.readContactData(getContentResolver());
-	    nameValueArr = (ArrayList<String>)contactsArray[0];
-	    contacts = (Map<Integer, List<String>>)contactsArray[1];
+	    contactLoader = new GetContacts(contactsListener);
+	    contactLoader.execute(getContentResolver());
 	    
-	    //String[] contacts = getContacts();
-	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nameValueArr);
-	    etLendedTo.setAdapter(adapter);
 	    
 	    
 	    btnAddBook.setOnClickListener(new OnClickListener() {
@@ -165,6 +164,11 @@ public class AddBook extends Activity implements OnDownloadComplete {
 		//Toast.makeText(getApplicationContext(), downloader.getJsonResult(), Toast.LENGTH_SHORT).show();
 		Gson gson = new Gson();
 		BookJsonAdapter adapter = gson.fromJson(downloader.getJsonResult(), BookJsonAdapter.class);
+		if(adapter == null)
+		{
+			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();
+			return;
+		}
 		Book resultBook = adapter.convertToBook();
 		if(resultBook == null)
 		{
@@ -213,8 +217,18 @@ public class AddBook extends Activity implements OnDownloadComplete {
 	{
 		if(isbn.length() == 0){Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();return;}
 		if(!isConnectedToInternet()){Toast.makeText(getApplicationContext(), getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
-		downloader = new DownloadInfo(activity);
+		downloader = new DownloadInfo(downloadListener);
 		downloader.execute(isbn);
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void OnLoadingFinished(Object[] contactsArray) {
+	    nameValueArr = (ArrayList<String>)contactsArray[0];
+	    contacts = (Map<Integer, List<String>>)contactsArray[1];
+	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nameValueArr);
+	    etLendedTo.setAdapter(adapter);
 	}
 	
 	

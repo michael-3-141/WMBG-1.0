@@ -21,16 +21,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class EditBook extends Activity {
+public class EditBook extends Activity implements OnContactLoadingComplete {
 
 	List<Book> items = new ArrayList<Book>();
 	int editPos;
 	Book editedItem;
 	List<String> autoNames = new ArrayList<String>();
+	AutoCompleteTextView etLendedTo;
 	private ArrayAdapter<String> adapter;
 	private Map<Integer, List<String>> contacts;
+	OnContactLoadingComplete contactsListener;
+	GetContacts contactLoader;
+	Object[] contactResults;
 	/** Called when the activity is first created. */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -42,16 +45,16 @@ public class EditBook extends Activity {
 	    editPos = b.getInt("position");
 	    final EditText etbookname = (EditText)findViewById(R.id.etBookName);
 	    final EditText etBookAuthor = (EditText)findViewById(R.id.etAuthorName);
-	    final AutoCompleteTextView etLendedTo = (AutoCompleteTextView)findViewById(R.id.etLendedTo);
+	    etLendedTo = (AutoCompleteTextView)findViewById(R.id.etLendedTo);
 	    final Button btnAddBook = (Button)findViewById(R.id.btnAddBook);
 	    final EditText etEmail = (EditText)findViewById(R.id.etEmail);
 	    editedItem = items.get(editPos);
 	    etbookname.setText(editedItem.getName());
 	    etBookAuthor.setText(editedItem.getAuthor());
 	    etLendedTo.setText(editedItem.getLendedTo());
-	    Object[] contactsArray = Library.readContactData(getContentResolver());
-	    autoNames = (ArrayList<String>)contactsArray[0];
-	    contacts = (Map<Integer, List<String>>)contactsArray[1];
+	    etEmail.setText(editedItem.getEmail());
+	    contactLoader = new GetContacts(contactsListener);
+	    contactLoader.execute(getContentResolver());
 	    
 	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, autoNames);
 	    etLendedTo.setAdapter(adapter);
@@ -108,6 +111,14 @@ public class EditBook extends Activity {
 		});
 	    
 	    
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public void OnLoadingFinished(Object[] contactsArray) {
+	    autoNames = (ArrayList<String>)contactsArray[0];
+	    contacts = (Map<Integer, List<String>>)contactsArray[1];
+	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, autoNames);
+	    etLendedTo.setAdapter(adapter);
 	}
 	
 	

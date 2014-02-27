@@ -1,11 +1,12 @@
 package com.elgavi.michael.perlib.book;
 
 import com.elgavi.michael.perlib.R;
+import com.google.gson.annotations.Expose;
 
 import android.content.Context;
 
 public class Settings {
-	private String emailMessage;
+	@Expose private String emailMessage;
 	Context cx;
 
 	public Settings(String emailMessage, Context cx) {

@@ -21,6 +21,7 @@ import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class Library {
 	
@@ -65,7 +66,7 @@ public class Library {
 			try {
 				FileWriter fw = new FileWriter(bookList);
 				BufferedWriter bw = new BufferedWriter(fw);
-				Gson gson = new Gson();
+				Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 				String json = gson.toJson(settings);
 				//Log.d("json", json);
 				bw.write(json+eol);
@@ -81,6 +82,7 @@ public class Library {
 	
 	@SuppressLint("UseSparseArrays")
 	public static Object[] readContactData(ContentResolver cr) {
+        Object[] results = new Object[3];
 		try{
         	List<String> names = new ArrayList<String>();
         	Map<Integer, String> emails = new HashMap<Integer, String>();
@@ -140,14 +142,13 @@ public class Library {
             }
             cur.close();
             
-            Object[] results = new Object[3];
             results[0] = names;
             results[1] = contacts;
             results[2] = emails;
 	    } catch (NullPointerException e) {
 	        Log.i("AutocompleteContacts","Exception : "+ e);
 	    }
-        return null;
+        return results;
    }
 	
 	public static Settings loadSettings(Context cx)

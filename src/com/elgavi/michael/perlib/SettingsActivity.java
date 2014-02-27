@@ -35,6 +35,7 @@ public class SettingsActivity extends Activity {
 				settings.setEmailMessage(customMessage.getText().toString());
 				Library.saveSettings(settings);
 				Intent main = new Intent(getApplicationContext(), MainActivity.class);
+				main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(main);
 			}
 		});
