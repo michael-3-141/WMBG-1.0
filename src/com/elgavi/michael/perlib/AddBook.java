@@ -7,10 +7,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.AsyncQueryHandler;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -70,8 +75,7 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	    contactsListener = this;
 	    final IntentIntegrator scanIntegrator = new IntentIntegrator(this);
 	    contactLoader = new GetContacts(contactsListener);
-	    contactLoader.execute(getContentResolver());
-	    
+	    startContactSearch();
 	    
 	    
 	    btnAddBook.setOnClickListener(new OnClickListener() {
@@ -154,6 +158,19 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	    
 	}
 
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void startContactSearch()
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			contactLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getContentResolver());
+		}
+		else
+		{
+			contactLoader.execute(getContentResolver());
+		}
+	}
 
 	@Override
 	public void OnTaskFinished() {
@@ -195,22 +212,32 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 		}
 	}
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void handleISBN(String isbn)
 	{
 		if(isbn.length() == 0){Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();return;}
 		if(!Library.isConnectedToInternet(getApplicationContext())){Toast.makeText(getApplicationContext(), getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
 		downloader = new DownloadInfo(downloadListener);
-		downloader.execute(isbn);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			downloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isbn);
+		}
+		else
+		{
+			downloader.execute(isbn);
+		}
 	}
 
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void OnLoadingFinished(Object[] contactsArray) {
+		Log.i("autocompletecontacts", "Finished loading contacts");
 	    nameValueArr = (ArrayList<String>)contactsArray[0];
 	    contacts = (Map<Integer, List<String>>)contactsArray[1];
 	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nameValueArr);
 	    etLendedTo.setAdapter(adapter);
+	    adapter.notifyDataSetChanged();
 	}
 	
 	

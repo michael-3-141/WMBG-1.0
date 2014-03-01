@@ -19,14 +19,16 @@
 
         <Button
             android:id="@+id/btnDownloadInfo"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/getBookData" />
 
         <Button
             android:id="@+id/btnScanISBN"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/scanIsbnBarcode" />
 
     </LinearLayout>
@@ -66,7 +68,7 @@
 
     <Button
         android:id="@+id/btnAddBook"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/addbook" />
 

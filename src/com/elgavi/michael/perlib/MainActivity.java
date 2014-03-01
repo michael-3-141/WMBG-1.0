@@ -91,8 +91,10 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 							Uri uri = Uri.parse(uriText);
 					        Intent myActivity2 = new Intent(Intent.ACTION_SENDTO);                              
 					        myActivity2.setData(uri);
-					        startActivity(Intent.createChooser(myActivity2, "Send Email"));
+					        startActivity(Intent.createChooser(myActivity2, getString(R.string.sendEmail)));
 							break;
+						case 2:
+							returnItem(position);
 						default:
 							break;
 						}
@@ -275,6 +277,40 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		AlertDialog dialog = delete_builder.create();
 		dialog.show();
 	}
+	
+	private void returnItem(final int position)
+	{
+		Book item = items.get(position);
+		item.setLendedTo("");
+		item.setEmail("");
+		items.set(position, item);
+		refreshList();
+		Library.saveInfo(items);
+	}
+	
+	private void returnOrDeleteItem(final int position)
+	{
+		AlertDialog.Builder delete_or_return_builder = new AlertDialog.Builder(MainActivity.this);
+		delete_or_return_builder.setPositiveButton(getString(R.string.chooseReturn) , new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				returnItem(position);
+			}
+		});
+		delete_or_return_builder.setNegativeButton(getString(R.string.chooseDelete), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				deleteItem(position);
+			}
+		});
+		delete_or_return_builder.setMessage(getString(R.string.returnOrDelete));
+		AlertDialog dialog = delete_or_return_builder.create();
+		dialog.show();
+	}
 
 	@Override
 	public void OnTaskFinished() {
@@ -309,7 +345,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		}
 		if(matches.size() == 1)
 		{
-			deleteItem(matcheIds.get(0));
+			returnOrDeleteItem(matcheIds.get(0));
 		}
 		else if(matches.size() == 0)
 		{
@@ -325,7 +361,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					
-					deleteItem(matcheIds.get(which));
+					returnOrDeleteItem(matcheIds.get(which));
 				}
 			});
 			

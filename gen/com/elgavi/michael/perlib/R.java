@@ -66,6 +66,8 @@ public final class R {
         public static final int authorName=0x7f050003;
         public static final int bookname=0x7f050002;
         public static final int by=0x7f05000d;
+        public static final int chooseDelete=0x7f05001c;
+        public static final int chooseReturn=0x7f05001d;
         public static final int deafultEmailMessage=0x7f050018;
         public static final int deleteByScan=0x7f05001a;
         public static final int deleteCancel=0x7f050009;
@@ -84,6 +86,7 @@ public final class R {
         public static final int lendedToDisplay=0x7f05000c;
         public static final int noConnection=0x7f05000f;
         public static final int options=0x7f050012;
+        public static final int returnOrDelete=0x7f05001e;
         public static final int save=0x7f050019;
         public static final int scanIsbnBarcode=0x7f050010;
         public static final int sendEmail=0x7f050016;
