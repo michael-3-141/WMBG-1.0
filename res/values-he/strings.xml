@@ -34,5 +34,6 @@
     <string name="save">שמור</string>
     <string name="deleteByScan">מחיקה/החזרה ע"י סריקה</string>
     <string name="duplicateBooks">נמצאו ספרים כפולים</string>
+    <string name="none">אף אחד</string>
 
 </resources>

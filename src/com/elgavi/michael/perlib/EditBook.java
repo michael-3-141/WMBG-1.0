@@ -121,6 +121,10 @@ public class EditBook extends Activity implements OnContactLoadingComplete {
 	    etLendedTo.setAdapter(adapter);
 	}
 	
-	
+	@Override
+	public void onDestroy()
+	{
+		contactLoader.cancel(true);
+	}
 
 }

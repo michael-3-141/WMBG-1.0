@@ -85,6 +85,7 @@ public final class R {
         public static final int lendedTo=0x7f050004;
         public static final int lendedToDisplay=0x7f05000c;
         public static final int noConnection=0x7f05000f;
+        public static final int none=0x7f05001f;
         public static final int options=0x7f050012;
         public static final int returnOrDelete=0x7f05001e;
         public static final int save=0x7f050019;

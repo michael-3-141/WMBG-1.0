@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.AsyncQueryHandler;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -241,5 +240,11 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	}
 	
 	
+	@Override
+	public void onDestroy()
+	{
+		contactLoader.cancel(true);
+		downloader.cancel(true);
+	}
 
 }

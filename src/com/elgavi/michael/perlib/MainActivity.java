@@ -241,7 +241,16 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		    Book item = i.next();
 		    Map<String,String> stringMap = new HashMap<String,String>();
 		    stringMap.put("name", item.getName());
-		    stringMap.put("lendedto", getString(R.string.lendedToDisplay) + item.getLendedTo());
+		    String lendedtotext = "";
+		    if(item.getLendedTo().length() == 0)
+		    {
+		    	lendedtotext = getString(R.string.none);
+		    }
+		    else
+		    {
+		    	lendedtotext = item.getLendedTo();
+		    }
+		    stringMap.put("lendedto", getString(R.string.lendedToDisplay) + lendedtotext);
 		    stringMap.put("Author", getString(R.string.by) + item.getAuthor());
 		    displayList.add(stringMap);
 		}
@@ -369,4 +378,5 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 			dialog.show();
 		}
 	}
+	
 }
