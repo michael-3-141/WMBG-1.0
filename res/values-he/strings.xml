@@ -22,6 +22,7 @@
     <string-array name="options_array">
         <item >מחק</item>
         <item >שלח תזכורת</item>
+        <item>סמן כהוחזר</item>
     </string-array>
     <string name="options">אפשרויות</string>
     <string name="emailSubject">תזכורת ספר מושאל</string>
@@ -31,7 +32,7 @@
     <string name="settings">הגדרות</string>
     <string name="deafultEmailMessage">הודעת אימייל: (כתוב @book@ איפה שאתה רוצה להשים את שם הספר)</string>
     <string name="save">שמור</string>
-    <string name="deleteByScan">מחיקה ע"י סריקה</string>
+    <string name="deleteByScan">מחיקה/החזרה ע"י סריקה</string>
     <string name="duplicateBooks">נמצאו ספרים כפולים</string>
 
 </resources>
