@@ -125,6 +125,7 @@ public class EditBook extends Activity implements OnContactLoadingComplete {
 	public void onDestroy()
 	{
 		contactLoader.cancel(true);
+		super.onDestroy();
 	}
 
 }

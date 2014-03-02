@@ -244,7 +244,11 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	public void onDestroy()
 	{
 		contactLoader.cancel(true);
-		downloader.cancel(true);
+		if(downloader != null)
+		{
+			downloader.cancel(true);
+		}
+		super.onDestroy();
 	}
 
 }
