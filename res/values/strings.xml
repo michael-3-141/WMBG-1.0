@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Perlib</string>
+    <string name="app_name">Where\'d My Book Go?</string>
     <string name="addbook">Add New Book</string>
     <string name="bookname">Book Name</string>
     <string name="authorName">Author Name</string>

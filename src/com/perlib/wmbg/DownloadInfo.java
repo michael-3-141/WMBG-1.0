@@ -1,4 +1,4 @@
-package com.elgavi.michael.perlib;
+package com.perlib.wmbg;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

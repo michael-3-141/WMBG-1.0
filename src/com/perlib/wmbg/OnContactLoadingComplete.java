@@ -1,4 +1,4 @@
-package com.elgavi.michael.perlib;
+package com.perlib.wmbg;
 
 public interface OnContactLoadingComplete {
 	void OnLoadingFinished(Object[] result);

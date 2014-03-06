@@ -29,5 +29,13 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:gravity="right"
             android:textDirection="rtl" />
+    
+    <TextView
+            android:id="@+id/text4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:gravity="right"
+            android:textDirection="rtl" />
 
 </LinearLayout>

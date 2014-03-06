@@ -1,4 +1,4 @@
-package com.elgavi.michael.perlib.book;
+package com.perlib.wmbg.book;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

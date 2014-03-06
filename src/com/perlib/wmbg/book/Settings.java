@@ -1,6 +1,6 @@
-package com.elgavi.michael.perlib.book;
+package com.perlib.wmbg.book;
 
-import com.elgavi.michael.perlib.R;
+import com.perlib.wmbg.R;
 import com.google.gson.annotations.Expose;
 
 import android.content.Context;

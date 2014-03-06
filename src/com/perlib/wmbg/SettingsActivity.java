@@ -1,4 +1,4 @@
-package com.elgavi.michael.perlib;
+package com.perlib.wmbg;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,8 +8,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.elgavi.michael.perlib.book.Library;
-import com.elgavi.michael.perlib.book.Settings;
+import com.perlib.wmbg.R;
+import com.perlib.wmbg.book.Library;
+import com.perlib.wmbg.book.Settings;
 
 public class SettingsActivity extends Activity {
 

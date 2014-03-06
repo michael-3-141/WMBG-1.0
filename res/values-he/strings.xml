@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Perlib</string>
+    <string name="app_name">Where\'d My Book Go?</string>
     <string name="addbook">הוסף ספר</string>
     <string name="bookname">שם הספר</string>
     <string name="authorName">שם המחבר</string>
@@ -34,6 +34,9 @@
     <string name="save">שמור</string>
     <string name="deleteByScan">מחיקה/החזרה ע"י סריקה</string>
     <string name="duplicateBooks">נמצאו ספרים כפולים</string>
+    <string name="chooseDelete">מחק</string>
+	<string name="chooseReturn">סמן כהוחזר</string>
+	<string name="returnOrDelete">האם אתה רוצה למחוק את הספר או לסמ אותו כהוחזר?</string>
     <string name="none">אף אחד</string>
 
 </resources>

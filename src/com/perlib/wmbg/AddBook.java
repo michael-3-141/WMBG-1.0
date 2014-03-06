@@ -1,6 +1,7 @@
-package com.elgavi.michael.perlib;
+package com.perlib.wmbg;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,15 +23,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.elgavi.michael.perlib.book.Book;
-import com.elgavi.michael.perlib.book.BookJsonAdapter;
-import com.elgavi.michael.perlib.book.Library;
+import com.perlib.wmbg.R;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.perlib.wmbg.book.Book;
+import com.perlib.wmbg.book.BookJsonAdapter;
+import com.perlib.wmbg.book.Library;
 
 public class AddBook extends Activity implements OnDownloadComplete, OnContactLoadingComplete {
 
@@ -50,6 +53,7 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
     Button btnDownloadInfo;
     Button btnScanISBN;
     EditText etEmail;
+    DatePicker dpDueDate;
 	private ArrayAdapter<String> adapter;
 	Object[] contactResults;
 	
@@ -70,12 +74,12 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	    btnDownloadInfo = (Button)findViewById(R.id.btnDownloadInfo);
 	    btnScanISBN = (Button)findViewById(R.id.btnScanISBN);
 	    etEmail = (EditText)findViewById(R.id.etEmail);
+	    dpDueDate = (DatePicker)findViewById(R.id.dpDueDate);
 	    downloadListener = this;
 	    contactsListener = this;
 	    final IntentIntegrator scanIntegrator = new IntentIntegrator(this);
 	    contactLoader = new GetContacts(contactsListener);
 	    startContactSearch();
-	    
 	    
 	    btnAddBook.setOnClickListener(new OnClickListener() {
 			
@@ -86,14 +90,11 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 				String bookAuthor = etBookAuthor.getText().toString();
 				String lendedTo = etLendedTo.getText().toString();
 				String email = etEmail.getText().toString();
-				/*String[] splitBookAuthor = bookAuthor.split("\\s+");
-				if(!(splitBookAuthor.length == 2 && splitBookAuthor[0] != null && splitBookAuthor[1] != null))
-				{
-					Toast.makeText(getApplicationContext(), "Please specify a valid author name. (First and Last name)", Toast.LENGTH_SHORT).show();
-					return;
-				}
-				items.set(editPos, new Book(bookname,splitBookAuthor[0],splitBookAuthor[1],lendedTo));*/
-				items.add(new Book(bookname, bookAuthor ,lendedTo, email));
+				GregorianCalendar lendedDateGc = new GregorianCalendar();
+				long lendedDate = lendedDateGc.getTimeInMillis()/1000;
+				GregorianCalendar dueDateGc = new GregorianCalendar(dpDueDate.getYear(), dpDueDate.getMonth(), dpDueDate.getDayOfMonth());
+				long dueDate = dueDateGc.getTimeInMillis()/1000;
+				items.add(new Book(bookname, bookAuthor ,lendedTo, email, lendedDate, dueDate));
 				btnScanISBN.setOnClickListener(this);
 				
 				Library.saveInfo(items);

@@ -1,4 +1,4 @@
-package com.elgavi.michael.perlib.book;
+package com.perlib.wmbg.book;
 
 public class BookJsonAdapter {
 	JsonBook[] data = new JsonBook[]{};

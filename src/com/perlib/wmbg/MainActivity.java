@@ -1,12 +1,14 @@
-package com.elgavi.michael.perlib;
+package com.perlib.wmbg;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,13 +33,14 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.elgavi.michael.perlib.book.Book;
-import com.elgavi.michael.perlib.book.BookJsonAdapter;
-import com.elgavi.michael.perlib.book.Library;
-import com.elgavi.michael.perlib.book.Settings;
+import com.perlib.wmbg.R;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.perlib.wmbg.book.Book;
+import com.perlib.wmbg.book.BookJsonAdapter;
+import com.perlib.wmbg.book.Library;
+import com.perlib.wmbg.book.Settings;
 
 public class MainActivity extends Activity implements OnDownloadComplete{
 
@@ -242,6 +245,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		    Map<String,String> stringMap = new HashMap<String,String>();
 		    stringMap.put("name", item.getName());
 		    String lendedtotext = "";
+		    String dateText = "";
 		    if(item.getLendedTo().length() == 0)
 		    {
 		    	lendedtotext = getString(R.string.none);
@@ -250,12 +254,22 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		    {
 		    	lendedtotext = item.getLendedTo();
 		    }
+		    if(!(item.getDateLended() == -1 && item.getDueDate() == -1))
+		    {
+			    GregorianCalendar gcDateLended = new GregorianCalendar();
+			    gcDateLended.setTimeInMillis(item.getDateLended()*1000);
+			    GregorianCalendar gcDueDate = new GregorianCalendar();
+			    gcDueDate.setTimeInMillis(item.getDueDate()*1000);
+			    SimpleDateFormat format = new SimpleDateFormat("d/M/y");
+			    dateText = format.format(gcDateLended.getTime()) + " - " + format.format(gcDueDate.getTime());
+		    }
 		    stringMap.put("lendedto", getString(R.string.lendedToDisplay) + lendedtotext);
 		    stringMap.put("Author", getString(R.string.by) + item.getAuthor());
+		    stringMap.put("date", dateText);
 		    displayList.add(stringMap);
 		}
 		//itemsArray = displayList.toArray(itemsArray);
-		SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto"}, new int[] {R.id.text1,R.id.text2,R.id.text3});
+		SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
 		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, itemsArray);
 		
 		bookList.setAdapter(adapter);
@@ -292,6 +306,8 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		Book item = items.get(position);
 		item.setLendedTo("");
 		item.setEmail("");
+		item.setDateLended(-1);
+		item.setDueDate(-1);
 		items.set(position, item);
 		refreshList();
 		Library.saveInfo(items);
@@ -377,6 +393,13 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 			AlertDialog dialog = options_builder.create();
 			dialog.show();
 		}
+	}
+	
+	@Override
+	public void onResume()
+	{
+		refreshList();
+		super.onResume();
 	}
 	
 }

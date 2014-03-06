@@ -1,4 +1,4 @@
-package com.elgavi.michael.perlib.book;
+package com.perlib.wmbg.book;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,13 +9,17 @@ public class Book implements Parcelable {
 	private String author;
 	private String lendedTo;
 	private String email;
+	private long dateLended;
+	private long dueDate;
 	
-	public Book(String name, String author, String lendedTo, String email)
+	public Book(String name, String author, String lendedTo, String email, long dateLended, long dueDate)
 	{
 		this.name = name;
 		this.author = author;
 		this.lendedTo = lendedTo;
 		this.email = email;
+		this.dateLended = dateLended;
+		this.dueDate = dueDate;
 	}
 	
 	public Book()
@@ -33,6 +37,8 @@ public class Book implements Parcelable {
 		this.author = dest.readString();
 		this.lendedTo = dest.readString();
 		this.email = dest.readString();
+		this.dateLended = dest.readLong();
+		this.dueDate = dest.readLong();
 	}
 
 	public String getName() {
@@ -74,6 +80,8 @@ public class Book implements Parcelable {
 		dest.writeString(this.author);
 		dest.writeString(this.lendedTo);
 		dest.writeString(this.email);
+		dest.writeLong(this.dateLended);
+		dest.writeLong(this.dueDate);
 		
 	}
 	
@@ -95,5 +103,21 @@ public class Book implements Parcelable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public long getDateLended() {
+		return dateLended;
+	}
+
+	public void setDateLended(long dateLended) {
+		this.dateLended = dateLended;
+	}
+
+	public long getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(long dueDate) {
+		this.dueDate = dueDate;
 	}
 }
