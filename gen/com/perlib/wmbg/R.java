@@ -42,7 +42,7 @@ public final class R {
         public static final int bookList=0x7f0a0009;
         public static final int btnAddBook=0x7f0a0008;
         public static final int btnDownloadInfo=0x7f0a0001;
-        public static final int btnSave=0x7f0a000c;
+        public static final int btnSave=0x7f0a000e;
         public static final int btnScanISBN=0x7f0a0002;
         public static final int customMessage=0x7f0a000b;
         public static final int delete=0x7f0a0015;
@@ -53,13 +53,13 @@ public final class R {
         public static final int etISBN=0x7f0a0000;
         public static final int etLendedTo=0x7f0a0005;
         public static final int settings=0x7f0a0014;
-        public static final int tbDeleteConfirm=0x7f0a000e;
+        public static final int tbDeleteConfirm=0x7f0a000d;
         public static final int text1=0x7f0a000f;
         public static final int text2=0x7f0a0010;
         public static final int text3=0x7f0a0011;
         public static final int text4=0x7f0a0012;
         public static final int textView1=0x7f0a000a;
-        public static final int textView2=0x7f0a000d;
+        public static final int textView2=0x7f0a000c;
     }
     public static final class layout {
         public static final int activity_addbook=0x7f030000;
