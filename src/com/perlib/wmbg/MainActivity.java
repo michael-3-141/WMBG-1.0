@@ -57,7 +57,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	ListView bookList;
 	SimpleAdapter adapter;
 	SwipeDismissAdapter swipeAdapter;
-	List<Map<String,String>> displayList;
+	List<Map<String,String>> displayList = new ArrayList<Map<String,String>>();;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,14 +67,37 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		downloadListener = this;
 		
 		settings = Library.loadSettings(getApplicationContext());
+		//TODO:Remove in next version. This is just to handle the added setting.
+		settings.setSwipeMode(Settings.MODE_RETURN_ITEM);
+		settings.setConfirmDelete(true);
+		Library.saveSettings(settings);
+		//END Remove in next version
 		
 		if(getIntent().getExtras() != null)
 		{
 			Bundle b = getIntent().getExtras();
 			items = b.getParcelableArrayList("items");
 		}
-		
+		adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
+		swipeAdapter = new SwipeDismissAdapter(adapter ,new OnDismissCallback() {
+			
+			@Override
+			public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
+			    for (int position : reverseSortedPositions) {
+			    	if(settings.getSwipeMode() == Settings.MODE_DELETE_ITEM)
+			    	{
+			    		deleteItem(position);
+			    	}
+			    	else if(settings.getSwipeMode() == Settings.MODE_RETURN_ITEM)
+			    	{
+			    		returnItem(position);
+			    	}
+			    }
+				
+			}
+		});
 		refreshList();
+		
 		
 		bookList.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -133,7 +156,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		
 		
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -244,10 +267,12 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		}
 	}
 	
+	
+	
 	private void refreshList()
 	{
 		loadData();
-		displayList = new ArrayList<Map<String,String>>();
+		displayList.clear();
 		for(Iterator<Book> i = items.iterator(); i.hasNext(); ) {
 		    Book item = i.next();
 		    Map<String,String> stringMap = new HashMap<String,String>();
@@ -279,20 +304,9 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		//itemsArray = displayList.toArray(itemsArray);
 		//SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
 		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, itemsArray);
-		adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
-		swipeAdapter = new SwipeDismissAdapter(adapter ,new OnDismissCallback() {
-			
-			@Override
-			public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
-			    for (int position : reverseSortedPositions) {
-			        deleteItem(position);
-			    }
-				
-			}
-		});
-		swipeAdapter.setAbsListView(bookList);
 		bookList.setAdapter(swipeAdapter);
-		//adapter.notifyDataSetChanged();
+		swipeAdapter.setAbsListView(bookList);
+		adapter.notifyDataSetChanged();
 	}
 
 	private void deleteItem(final int position)
@@ -340,8 +354,8 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		item.setDateLended(-1);
 		item.setDueDate(-1);
 		items.set(position, item);
-		refreshList();
 		Library.saveInfo(items);
+		refreshList();
 	}
 	
 	private void returnOrDeleteItem(final int position)

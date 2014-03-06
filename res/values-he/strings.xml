@@ -39,5 +39,10 @@
 	<string name="returnOrDelete">האם אתה רוצה למחוק את הספר או לסמ אותו כהוחזר?</string>
     <string name="none">אף אחד</string>
     <string name="deleteConfirmSetting">שאל האם אתה בטוח שאתה רוצה למחוק</string>
+    <string-array name="swipemodes">
+       <item >מחק</item>
+       <item >סמן כהוחזר</item>
+   </string-array>
+   <string name="swipeModeText">סמן מה אתה רוצה שיקרה כשאתה סוחב את אחד הספרים ברשימה:</string>
 
 </resources>

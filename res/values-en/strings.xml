@@ -39,4 +39,9 @@
 	<string name="returnOrDelete">Do you want to delete or return the book?</string>
 	<string name="none">None</string>
 	<string name="deleteConfirmSetting">Show confirmation messages for delete.</string>
+    <string-array name="swipemodes">
+       <item >Delete</item>
+       <item >Mark As Returned</item>
+   </string-array>
+   <string name="swipeModeText">Select what will happen when you swipe a list item: </string>
 </resources>
