@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import android.app.Activity;
@@ -34,6 +35,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.perlib.wmbg.R;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -260,7 +262,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 			    gcDateLended.setTimeInMillis(item.getDateLended()*1000);
 			    GregorianCalendar gcDueDate = new GregorianCalendar();
 			    gcDueDate.setTimeInMillis(item.getDueDate()*1000);
-			    SimpleDateFormat format = new SimpleDateFormat("d/M/y");
+			    SimpleDateFormat format = new SimpleDateFormat("d/M/y", Locale.US);
 			    dateText = format.format(gcDateLended.getTime()) + " - " + format.format(gcDueDate.getTime());
 		    }
 		    stringMap.put("lendedto", getString(R.string.lendedToDisplay) + lendedtotext);
@@ -400,6 +402,21 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	{
 		refreshList();
 		super.onResume();
+	}
+	
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		refreshList();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+	
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
 	}
 	
 }
