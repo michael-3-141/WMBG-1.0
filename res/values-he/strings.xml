@@ -38,5 +38,6 @@
 	<string name="chooseReturn">סמן כהוחזר</string>
 	<string name="returnOrDelete">האם אתה רוצה למחוק את הספר או לסמ אותו כהוחזר?</string>
     <string name="none">אף אחד</string>
+    <string name="deleteConfirmSetting">שאל האם אתה בטוח שאתה רוצה למחוק</string>
 
 </resources>

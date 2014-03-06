@@ -30,10 +30,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.perlib.wmbg.R;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
@@ -52,6 +55,9 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	DownloadInfo downloader;
 	private OnDownloadComplete downloadListener;
 	ListView bookList;
+	SimpleAdapter adapter;
+	SwipeDismissAdapter swipeAdapter;
+	List<Map<String,String>> displayList;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,7 +66,6 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		bookList = (ListView)findViewById(R.id.bookList);
 		downloadListener = this;
 		
-		loadData();
 		settings = Library.loadSettings(getApplicationContext());
 		
 		if(getIntent().getExtras() != null)
@@ -241,7 +246,8 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	
 	private void refreshList()
 	{
-		List<Map<String,String>> displayList = new ArrayList<Map<String,String>>();
+		loadData();
+		displayList = new ArrayList<Map<String,String>>();
 		for(Iterator<Book> i = items.iterator(); i.hasNext(); ) {
 		    Book item = i.next();
 		    Map<String,String> stringMap = new HashMap<String,String>();
@@ -271,36 +277,59 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		    displayList.add(stringMap);
 		}
 		//itemsArray = displayList.toArray(itemsArray);
-		SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
+		//SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
 		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, itemsArray);
-		
-		bookList.setAdapter(adapter);
+		adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
+		swipeAdapter = new SwipeDismissAdapter(adapter ,new OnDismissCallback() {
+			
+			@Override
+			public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
+			    for (int position : reverseSortedPositions) {
+			        deleteItem(position);
+			    }
+				
+			}
+		});
+		swipeAdapter.setAbsListView(bookList);
+		bookList.setAdapter(swipeAdapter);
+		//adapter.notifyDataSetChanged();
 	}
 
 	private void deleteItem(final int position)
 	{
-		AlertDialog.Builder delete_builder = new AlertDialog.Builder(MainActivity.this);
-		delete_builder.setPositiveButton(getString(R.string.deleteYes) , new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+		if(settings.isConfirmDelete())
+		{
+			AlertDialog.Builder delete_builder = new AlertDialog.Builder(MainActivity.this);
+			delete_builder.setPositiveButton(getString(R.string.deleteYes) , new DialogInterface.OnClickListener() {
 				
-				items.remove(position);
-				refreshList();
-				Library.saveInfo(items);
-			}
-		});
-		delete_builder.setNegativeButton(getString(R.string.deleteCancel), new DialogInterface.OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					items.remove(position);
+					displayList.remove(position);
+					swipeAdapter.notifyDataSetChanged();
+					Library.saveInfo(items);
+				}
+			});
+			delete_builder.setNegativeButton(getString(R.string.deleteCancel), new DialogInterface.OnClickListener() {
 				
-				
-			}
-		});
-		delete_builder.setMessage(getString(R.string.deleteConfirm) + ' ' + '"' + items.get(position).getName() + '"' + "?").setTitle(getString(R.string.deleteConfirmTitle));
-		AlertDialog dialog = delete_builder.create();
-		dialog.show();
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					
+				}
+			});
+			delete_builder.setMessage(getString(R.string.deleteConfirm) + ' ' + '"' + items.get(position).getName() + '"' + "?").setTitle(getString(R.string.deleteConfirmTitle));
+			AlertDialog dialog = delete_builder.create();
+			dialog.show();
+		}
+		else
+		{
+			items.remove(position);
+			displayList.remove(position);
+			swipeAdapter.notifyDataSetChanged();
+			Library.saveInfo(items);
+		}
 	}
 	
 	private void returnItem(final int position)
@@ -400,15 +429,14 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	@Override
 	public void onResume()
 	{
-		refreshList();
 		super.onResume();
+		refreshList();
 	}
 	
 	@Override
 	public void onStart()
 	{
 		super.onStart();
-		refreshList();
 		EasyTracker.getInstance(this).activityStart(this);
 	}
 	
