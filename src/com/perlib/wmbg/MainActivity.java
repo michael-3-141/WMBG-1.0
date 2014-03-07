@@ -67,11 +67,6 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		downloadListener = this;
 		
 		settings = Library.loadSettings(getApplicationContext());
-		//TODO:Remove in next version. This is just to handle the added setting.
-		settings.setSwipeMode(Settings.MODE_RETURN_ITEM);
-		settings.setConfirmDelete(true);
-		Library.saveSettings(settings);
-		//END Remove in next version
 		
 		if(getIntent().getExtras() != null)
 		{
@@ -304,8 +299,15 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		//itemsArray = displayList.toArray(itemsArray);
 		//SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
 		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, itemsArray);
-		bookList.setAdapter(swipeAdapter);
-		swipeAdapter.setAbsListView(bookList);
+		if(settings.getSwipeMode() == Settings.MODE_NOTHING)
+		{
+			bookList.setAdapter(adapter);
+		}
+		else
+		{
+			bookList.setAdapter(swipeAdapter);
+			swipeAdapter.setAbsListView(bookList);
+		}
 		adapter.notifyDataSetChanged();
 	}
 

@@ -12,6 +12,7 @@ public class Settings {
 	Context cx;
 	public static final int MODE_DELETE_ITEM = 0;
 	public static final int MODE_RETURN_ITEM = 1;
+	public static final int MODE_NOTHING = 2;
 
 	public Settings(String emailMessage,boolean confirmDelete,int swipeMode, Context cx) {
 		super();

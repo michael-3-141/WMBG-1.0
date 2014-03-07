@@ -42,6 +42,9 @@
     <string-array name="swipemodes">
        <item >Delete</item>
        <item >Mark As Returned</item>
+       <item>Nothing</item>
    </string-array>
    <string name="swipeModeText">Select what will happen when you swipe a list item: </string>
+   <string name="requiredBookNameError">The book name field is required. Please enter a book name and try again.</string>
+   <string name="dueDate">Due date:</string>
 </resources>

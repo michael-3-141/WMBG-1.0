@@ -90,23 +90,40 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 				String bookAuthor = etBookAuthor.getText().toString();
 				String lendedTo = etLendedTo.getText().toString();
 				String email = etEmail.getText().toString();
-				GregorianCalendar lendedDateGc = new GregorianCalendar();
-				long lendedDate = lendedDateGc.getTimeInMillis()/1000;
-				GregorianCalendar dueDateGc = new GregorianCalendar(dpDueDate.getYear(), dpDueDate.getMonth(), dpDueDate.getDayOfMonth());
-				long dueDate = dueDateGc.getTimeInMillis()/1000;
-				items.add(new Book(bookname, bookAuthor ,lendedTo, email, lendedDate, dueDate));
-				btnScanISBN.setOnClickListener(this);
-				
-				Library.saveInfo(items);
-				
-				Intent main = new Intent(getApplicationContext(), MainActivity.class);
-				Bundle b = new Bundle();
-				b.putParcelableArrayList("items", (ArrayList<? extends Parcelable>) items);
-				
-				main.putExtras(b);
-				main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(main);
-				finish();
+				if(!(bookname.length() == 0))
+				{
+					long lendedDate;
+					long dueDate;
+					if(lendedTo.length() == 0)
+					{
+						lendedDate = -1;
+						dueDate = -1;
+					}
+					else
+					{
+						GregorianCalendar lendedDateGc = new GregorianCalendar();
+						lendedDate = lendedDateGc.getTimeInMillis()/1000;
+						GregorianCalendar dueDateGc = new GregorianCalendar(dpDueDate.getYear(), dpDueDate.getMonth(), dpDueDate.getDayOfMonth());
+						dueDate = dueDateGc.getTimeInMillis()/1000;
+					}
+					items.add(new Book(bookname, bookAuthor ,lendedTo, email, lendedDate, dueDate));
+					btnScanISBN.setOnClickListener(this);
+					
+					Library.saveInfo(items);
+					
+					Intent main = new Intent(getApplicationContext(), MainActivity.class);
+					Bundle b = new Bundle();
+					b.putParcelableArrayList("items", (ArrayList<? extends Parcelable>) items);
+					
+					main.putExtras(b);
+					main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					startActivity(main);
+					finish();
+				}
+				else
+				{
+					Toast.makeText(getApplicationContext(), getString(R.string.requiredBookNameError), Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	    
