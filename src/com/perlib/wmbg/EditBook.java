@@ -22,6 +22,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class EditBook extends Activity implements OnContactLoadingComplete {
@@ -76,31 +77,38 @@ public class EditBook extends Activity implements OnContactLoadingComplete {
 				String bookAuthor = etBookAuthor.getText().toString();
 				String lendedTo = etLendedTo.getText().toString();
 				String email = etEmail.getText().toString();
-				long lendedDate;
-				if(lendedTo != editedItem.getLendedTo())
+				if(!(bookname.length() == 0))
 				{
-					GregorianCalendar lendedDateGc = new GregorianCalendar();
-					lendedDate = lendedDateGc.getTimeInMillis()/1000;
+					long lendedDate;
+					if(lendedTo != editedItem.getLendedTo())
+					{
+						GregorianCalendar lendedDateGc = new GregorianCalendar();
+						lendedDate = lendedDateGc.getTimeInMillis()/1000;
+					}
+					else
+					{
+						lendedDate = editedItem.getDateLended();
+					}
+					GregorianCalendar dueDateGc = new GregorianCalendar(dpDueDate.getYear(), dpDueDate.getMonth(), dpDueDate.getDayOfMonth());
+					long dueDate = dueDateGc.getTimeInMillis()/1000;
+					items.set(editPos, new Book(bookname, bookAuthor ,lendedTo, email, lendedDate, dueDate));
+					
+					Library.saveInfo(items);
+					
+					Intent main = new Intent(getApplicationContext(), MainActivity.class);
+					Bundle b = new Bundle();
+					b.putParcelableArrayList("items", (ArrayList<? extends Parcelable>) items);
+					main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					main.putExtras(b);
+					startActivity(main);
+					finish();
 				}
 				else
 				{
-					lendedDate = editedItem.getDateLended();
+					Toast.makeText(getApplicationContext(), getString(R.string.requiredBookNameError), Toast.LENGTH_SHORT).show();
 				}
-				GregorianCalendar dueDateGc = new GregorianCalendar(dpDueDate.getYear(), dpDueDate.getMonth(), dpDueDate.getDayOfMonth());
-				long dueDate = dueDateGc.getTimeInMillis()/1000;
-				items.set(editPos, new Book(bookname, bookAuthor ,lendedTo, email, lendedDate, dueDate));
-				
-				Library.saveInfo(items);
-				
-				Intent main = new Intent(getApplicationContext(), MainActivity.class);
-				Bundle b = new Bundle();
-				b.putParcelableArrayList("items", (ArrayList<? extends Parcelable>) items);
-				main.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				main.putExtras(b);
-				startActivity(main);
-				finish();
-				
 			}
+				
 		});
 	    
 	    etLendedTo.setOnItemClickListener(new OnItemClickListener() {
