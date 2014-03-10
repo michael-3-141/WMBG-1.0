@@ -2,18 +2,22 @@ package com.perlib.wmbg;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.Library;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -24,8 +28,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 
-public class EditBook extends Activity implements OnContactLoadingComplete {
+public class EditBook extends Activity implements OnContactLoadingComplete, OnEmailLoadingListener {
 
 	List<Book> items = new ArrayList<Book>();
 	int editPos;
@@ -34,10 +39,12 @@ public class EditBook extends Activity implements OnContactLoadingComplete {
 	AutoCompleteTextView etLendedTo;
 	DatePicker dpDueDate;
 	private ArrayAdapter<String> adapter;
-	private Map<Integer, List<String>> contacts;
-	OnContactLoadingComplete contactsListener;
-	GetContacts contactLoader;
-	Object[] contactResults;
+	GetContactNames contactNameLoader;
+	GetContactEmail contactEmailLoader;
+	OnContactLoadingComplete contactsListener = this;
+	OnEmailLoadingListener contactEmailListener = this;
+	EditText etEmail;
+	private HashMap<Integer, String> nameIdMap;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +59,7 @@ public class EditBook extends Activity implements OnContactLoadingComplete {
 	    final EditText etBookAuthor = (EditText)findViewById(R.id.etAuthorName);
 	    etLendedTo = (AutoCompleteTextView)findViewById(R.id.etLendedTo);
 	    final Button btnAddBook = (Button)findViewById(R.id.btnAddBook);
-	    final EditText etEmail = (EditText)findViewById(R.id.etEmail);
+	    etEmail = (EditText)findViewById(R.id.etEmail);
 	    dpDueDate = (DatePicker)findViewById(R.id.dpDueDate);
 	    editedItem = items.get(editPos);
 	    etbookname.setText(editedItem.getName());
@@ -62,8 +69,7 @@ public class EditBook extends Activity implements OnContactLoadingComplete {
 	    GregorianCalendar editedDate = new GregorianCalendar();
 	    editedDate.setTimeInMillis(editedItem.getDueDate()*1000);
 	    dpDueDate.updateDate(editedDate.get(GregorianCalendar.YEAR), editedDate.get(GregorianCalendar.MONTH), editedDate.get(GregorianCalendar.DAY_OF_MONTH));
-	    contactLoader = new GetContacts(contactsListener);
-	    contactLoader.execute(getContentResolver());
+	    startContactSearch();
 	    
 	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, autoNames);
 	    etLendedTo.setAdapter(adapter);
@@ -116,16 +122,19 @@ public class EditBook extends Activity implements OnContactLoadingComplete {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
-				String name = etLendedTo.getText().toString();
-				String selectedName = "";
-				for(Entry<Integer, List<String>> row : contacts.entrySet())
+				 
+				String selectedName = (String) parent.getItemAtPosition(position);
+				String currentName;
+				for(Entry<Integer, String> row : nameIdMap.entrySet())
 				{
-					selectedName = row.getValue().get(0);
-					if(selectedName.equals(name))
+					currentName = row.getValue();
+					if(selectedName != null)
 					{
-						etEmail.setText(row.getValue().get(1));
-						break;
+						if(selectedName.equals(currentName))
+						{
+							contactEmailLoader = new GetContactEmail(getContentResolver(), contactEmailListener);
+							executeEmailLoader(row.getKey());
+						}
 					}
 				}
 			}
@@ -133,20 +142,63 @@ public class EditBook extends Activity implements OnContactLoadingComplete {
 	    
 	    
 	}
-	@SuppressWarnings("unchecked")
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void startContactSearch()
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			contactNameLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		}
+		else
+		{
+			contactNameLoader.execute();
+		}
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void executeEmailLoader(int id)
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			contactEmailLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
+		}
+		else
+		{
+			contactEmailLoader.execute(id);
+		}
+	}
+	
+	
 	@Override
-	public void OnLoadingFinished(Object[] contactsArray) {
-	    autoNames = (ArrayList<String>)contactsArray[0];
-	    contacts = (Map<Integer, List<String>>)contactsArray[1];
-	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, autoNames);
-	    etLendedTo.setAdapter(adapter);
+	public void OnNameLoadingFinished(HashMap<Integer, String> result) {
+		Log.i("autocompletecontacts", "Finished loading contacts");
+		nameIdMap = result;
+		for(Entry<Integer, String> row : nameIdMap.entrySet())
+		{
+			if(row.getValue().length() == 0)
+			{
+				adapter.add(row.getValue());
+			}
+		}
+	    adapter.notifyDataSetChanged();
 	}
 	
 	@Override
 	public void onDestroy()
 	{
-		contactLoader.cancel(true);
+		contactNameLoader.cancel(true);
+		if(contactEmailLoader != null)
+		{
+			contactEmailLoader.cancel(true);
+		}
 		super.onDestroy();
+	}
+	
+	@Override
+	public void OnEmailLoadingCompleted(String email) {
+		
+		etEmail.setText(email);
 	}
 
 }

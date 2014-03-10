@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -35,16 +36,17 @@ import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.book.Library;
 
-public class AddBook extends Activity implements OnDownloadComplete, OnContactLoadingComplete {
+public class AddBook extends Activity implements OnDownloadComplete, OnContactLoadingComplete, OnEmailLoadingListener {
 
 	List<Book> items = new ArrayList<Book>();
-	OnDownloadComplete downloadListener;
-	OnContactLoadingComplete contactsListener;
+	OnDownloadComplete downloadListener = this;
+	OnContactLoadingComplete contactsListener = this;
+	OnEmailLoadingListener contactEmailListener = this;
     public ArrayList<String> nameValueArr = new ArrayList<String>();
     @SuppressLint("UseSparseArrays")
-	public Map<Integer,List<String>> contacts = new HashMap<Integer, List<String>>();
 	DownloadInfo downloader;
-	GetContacts contactLoader;
+	GetContactNames contactNameLoader;
+	GetContactEmail contactEmailLoader;
     EditText etbookname;
     EditText etBookAuthor;
     AutoCompleteTextView etLendedTo;
@@ -55,7 +57,7 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
     EditText etEmail;
     DatePicker dpDueDate;
 	private ArrayAdapter<String> adapter;
-	Object[] contactResults;
+	Map<Integer, String> nameIdMap;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -75,11 +77,13 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	    btnScanISBN = (Button)findViewById(R.id.btnScanISBN);
 	    etEmail = (EditText)findViewById(R.id.etEmail);
 	    dpDueDate = (DatePicker)findViewById(R.id.dpDueDate);
-	    downloadListener = this;
-	    contactsListener = this;
+	    
 	    final IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-	    contactLoader = new GetContacts(contactsListener);
+	    contactNameLoader = new GetContactNames(contactsListener, getContentResolver());
 	    startContactSearch();
+	   
+	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nameValueArr);
+	    etLendedTo.setAdapter(adapter);
 	    
 	    btnAddBook.setOnClickListener(new OnClickListener() {
 			
@@ -154,18 +158,18 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				
-				String name = etLendedTo.getText().toString();
-				String selectedName = "";
-				for(Entry<Integer, List<String>> row : contacts.entrySet())
+				 
+				String selectedName = (String) parent.getItemAtPosition(position);
+				String currentName;
+				for(Entry<Integer, String> row : nameIdMap.entrySet())
 				{
-					selectedName = row.getValue().get(0);
+					currentName = row.getValue();
 					if(selectedName != null)
 					{
-						if(selectedName.equals(name))
+						if(selectedName.equals(currentName))
 						{
-							etEmail.setText(row.getValue().get(1));
-							break;
+							contactEmailLoader = new GetContactEmail(getContentResolver(), contactEmailListener);
+							executeEmailLoader(row.getKey());
 						}
 					}
 				}
@@ -181,11 +185,24 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	{
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 		{
-			contactLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getContentResolver());
+			contactNameLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 		}
 		else
 		{
-			contactLoader.execute(getContentResolver());
+			contactNameLoader.execute();
+		}
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	private void executeEmailLoader(int id)
+	{
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			contactEmailLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
+		}
+		else
+		{
+			contactEmailLoader.execute(id);
 		}
 	}
 
@@ -246,14 +263,17 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	}
 
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void OnLoadingFinished(Object[] contactsArray) {
+	public void OnNameLoadingFinished(HashMap<Integer, String> result) {
 		Log.i("autocompletecontacts", "Finished loading contacts");
-	    nameValueArr = (ArrayList<String>)contactsArray[0];
-	    contacts = (Map<Integer, List<String>>)contactsArray[1];
-	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, nameValueArr);
-	    etLendedTo.setAdapter(adapter);
+		nameIdMap = result;
+		for(Entry<Integer, String> row : nameIdMap.entrySet())
+		{
+			if(row.getValue().length() != 0)
+			{
+				adapter.add(row.getValue());
+			}
+		}
 	    adapter.notifyDataSetChanged();
 	}
 	
@@ -261,12 +281,23 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	@Override
 	public void onDestroy()
 	{
-		contactLoader.cancel(true);
+		contactNameLoader.cancel(true);
+		if(contactEmailLoader != null)
+		{
+			contactEmailLoader.cancel(true);
+		}
 		if(downloader != null)
 		{
 			downloader.cancel(true);
 		}
 		super.onDestroy();
+	}
+
+
+	@Override
+	public void OnEmailLoadingCompleted(String email) {
+		
+		etEmail.setText(email);
 	}
 
 }
