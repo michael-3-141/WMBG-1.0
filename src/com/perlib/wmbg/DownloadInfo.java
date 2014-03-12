@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 
 public class DownloadInfo extends AsyncTask<String, String, String> {
 
-	private String jsonResult;
 	private final String API_KEY = "33BNPPTM";
 	private OnDownloadComplete listener;
 	
@@ -55,12 +54,7 @@ public class DownloadInfo extends AsyncTask<String, String, String> {
 	@Override
 	protected void onPostExecute(String result)
 	{
-		jsonResult = result;
-		listener.OnTaskFinished();
-	}
-
-	public String getJsonResult() {
-		return jsonResult;
+		listener.OnTaskFinished(result);
 	}
 
 }

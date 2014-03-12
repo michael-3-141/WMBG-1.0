@@ -13,17 +13,24 @@ import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.perlib.wmbg.DownloadInfo;
+import com.perlib.wmbg.OnDownloadComplete;
+import com.perlib.wmbg.R;
 
 public class Library {
 	
@@ -197,5 +204,21 @@ public class Library {
 
 	      }
 	      return false;
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static void handleISBN(String isbn, Context cx, OnDownloadComplete listener)
+	{
+		if(isbn.length() == 0){Toast.makeText(cx, cx.getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();return;}
+		if(!Library.isConnectedToInternet(cx)){Toast.makeText(cx, cx.getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
+		DownloadInfo downloader = new DownloadInfo(listener);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+		{
+			downloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isbn);
+		}
+		else
+		{
+			downloader.execute(isbn);
+		}
 	}
 }

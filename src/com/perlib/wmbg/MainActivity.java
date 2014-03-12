@@ -49,11 +49,10 @@ import com.perlib.wmbg.book.Settings;
 
 public class MainActivity extends Activity implements OnDownloadComplete{
 
-	//Book[] items = new Book[]{};
 	List<Book> items = new ArrayList<Book>(); 
 	Settings settings;
 	DownloadInfo downloader;
-	private OnDownloadComplete downloadListener;
+	OnDownloadComplete downloadListener;
 	ListView bookList;
 	SimpleAdapter adapter;
 	SwipeDismissAdapter swipeAdapter;

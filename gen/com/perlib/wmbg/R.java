@@ -39,43 +39,52 @@ public final class R {
         public static final int ic_launcher=0x7f020003;
     }
     public static final class id {
-        public static final int addbook=0x7f0a0015;
+        public static final int addbook=0x7f0a001b;
         public static final int bookList=0x7f0a000a;
         public static final int btnAddBook=0x7f0a0009;
         public static final int btnDownloadInfo=0x7f0a0001;
-        public static final int btnSave=0x7f0a0010;
+        public static final int btnEditBook=0x7f0a0011;
+        public static final int btnManualAddBook=0x7f0a000d;
+        public static final int btnReturnBook=0x7f0a0010;
+        public static final int btnSave=0x7f0a0016;
+        public static final int btnScanBook=0x7f0a000c;
         public static final int btnScanISBN=0x7f0a0002;
-        public static final int customMessage=0x7f0a000b;
-        public static final int delete=0x7f0a0017;
+        public static final int btnSeachBooks=0x7f0a000b;
+        public static final int customMessage=0x7f0a0012;
+        public static final int delete=0x7f0a001d;
         public static final int dpDueDate=0x7f0a0008;
         public static final int etAuthorName=0x7f0a0004;
         public static final int etBookName=0x7f0a0003;
         public static final int etEmail=0x7f0a0006;
         public static final int etISBN=0x7f0a0000;
         public static final int etLendedTo=0x7f0a0005;
-        public static final int settings=0x7f0a0016;
-        public static final int spSwipeMode=0x7f0a000f;
-        public static final int tbDeleteConfirm=0x7f0a000d;
-        public static final int text1=0x7f0a0011;
-        public static final int text2=0x7f0a0012;
-        public static final int text3=0x7f0a0013;
-        public static final int text4=0x7f0a0014;
+        public static final int settings=0x7f0a001c;
+        public static final int spSwipeMode=0x7f0a0015;
+        public static final int tbDeleteConfirm=0x7f0a0013;
+        public static final int text1=0x7f0a0017;
+        public static final int text2=0x7f0a0018;
+        public static final int text3=0x7f0a0019;
+        public static final int text4=0x7f0a001a;
         public static final int textView1=0x7f0a0007;
-        public static final int textView2=0x7f0a000c;
-        public static final int textView3=0x7f0a000e;
+        public static final int textView3=0x7f0a0014;
+        public static final int tvBookAuthor=0x7f0a000f;
+        public static final int tvBookName=0x7f0a000e;
     }
     public static final class layout {
         public static final int activity_addbook=0x7f030000;
         public static final int activity_editbook=0x7f030001;
         public static final int activity_main=0x7f030002;
-        public static final int activity_settings=0x7f030003;
-        public static final int simple_list_item_3=0x7f030004;
+        public static final int activity_menu=0x7f030003;
+        public static final int activity_scanbook=0x7f030004;
+        public static final int activity_settings=0x7f030005;
+        public static final int simple_list_item_3=0x7f030006;
     }
     public static final class menu {
         public static final int main=0x7f090000;
     }
     public static final class string {
         public static final int InvalidISBN=0x7f04000f;
+        public static final int addScannedBook=0x7f040029;
         public static final int addbook=0x7f040002;
         public static final int app_name=0x7f040001;
         public static final int authorName=0x7f040004;
@@ -93,6 +102,7 @@ public final class R {
         public static final int dueDate=0x7f040024;
         public static final int duplicateBooks=0x7f04001c;
         public static final int editBook=0x7f040006;
+        public static final int editScannedBook=0x7f04002b;
         public static final int email=0x7f040012;
         public static final int emailBodyA=0x7f040015;
         public static final int emailBodyB=0x7f040016;
@@ -104,16 +114,21 @@ public final class R {
         public static final int isbnCode=0x7f04000b;
         public static final int lendedTo=0x7f040005;
         public static final int lendedToDisplay=0x7f04000d;
+        public static final int manualAddBook=0x7f040027;
         public static final int noConnection=0x7f040010;
         public static final int none=0x7f040020;
         public static final int options=0x7f040013;
         public static final int requiredBookNameError=0x7f040023;
         public static final int returnOrDelete=0x7f04001f;
+        public static final int returnScannedBook=0x7f04002a;
         public static final int save=0x7f04001a;
+        public static final int scanBook=0x7f040026;
         public static final int scanIsbnBarcode=0x7f040011;
+        public static final int searchBook=0x7f040025;
         public static final int sendEmail=0x7f040017;
         public static final int settings=0x7f040018;
         public static final int swipeModeText=0x7f040022;
+        public static final int youScanned=0x7f040028;
     }
     public static final class style {
         /** 
