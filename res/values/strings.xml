@@ -54,4 +54,5 @@
    <string name="addScannedBook">Add this book to list</string>
    <string name="returnScannedBook">Return book from</string>
    <string name="editScannedBook">Edit this book</string>
+   <string name="ok">OK</string>
 </resources>

@@ -1,13 +1,7 @@
 package com.perlib.wmbg;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,7 +16,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,8 +33,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismis
 import com.perlib.wmbg.R;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.book.Library;
@@ -52,7 +43,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	List<Book> items = new ArrayList<Book>(); 
 	Settings settings;
 	DownloadInfo downloader;
-	OnDownloadComplete downloadListener;
+	OnDownloadComplete downloadListener = this;
 	ListView bookList;
 	SimpleAdapter adapter;
 	SwipeDismissAdapter swipeAdapter;
@@ -63,7 +54,6 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		setContentView(R.layout.activity_main);
 		
 		bookList = (ListView)findViewById(R.id.bookList);
-		downloadListener = this;
 		
 		settings = Library.loadSettings(getApplicationContext());
 		
@@ -167,41 +157,12 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 			case R.id.settings:
 				goto_settings();
 				return true;
-			case R.id.delete:
-				deleteByScan();
-				return true;
 			default:
 				return false;
 		
 		}
 	}
 	
-
-	private void deleteByScan() {
-		IntentIntegrator scanIntegrator = new IntentIntegrator(this);
-		scanIntegrator.initiateScan();
-		
-	}
-	
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-		
-		IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-		if (scanningResult != null) {
-			String contents = scanningResult.getContents();
-			if(contents != null)
-			{
-				if(contents.length() == 0){Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();return;}
-				if(!Library.isConnectedToInternet(getApplicationContext())){Toast.makeText(getApplicationContext(), getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
-				downloader = new DownloadInfo(downloadListener);
-				downloader.execute(contents);
-			}
-		}
-		else{
-		    Toast toast = Toast.makeText(getApplicationContext(), 
-		        "No scan data received!", Toast.LENGTH_SHORT);
-		    toast.show();
-		}
-	}
 
 	private void goto_settings() {
 		Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
@@ -228,44 +189,8 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		startActivity(addbook);
 	}
 	
-	private void loadData()
-	{
-		//String eol = System.getProperty("line.separator");
-		String fs = System.getProperty("file.separator");
-		File sd = Environment.getExternalStorageDirectory();
-		File listfile = new File(sd+fs+"booklist.txt");
-		
-		if(listfile.exists())
-		{
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(listfile));
-				
-				String line;
-				List<Book> list = new ArrayList<Book>();
-				Gson gson = new Gson();
-				Book[] bookArray = new Book[]{};
-				while((line = br.readLine()) != null)
-				{
-					bookArray = gson.fromJson(line, Book[].class);
-				}
-				list = new ArrayList<Book>(Arrays.asList(bookArray));
-				items = list;
-				br.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	
-	
 	private void refreshList()
 	{
-		loadData();
 		displayList.clear();
 		for(Iterator<Book> i = items.iterator(); i.hasNext(); ) {
 		    Book item = i.next();
@@ -295,9 +220,6 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		    stringMap.put("date", dateText);
 		    displayList.add(stringMap);
 		}
-		//itemsArray = displayList.toArray(itemsArray);
-		//SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
-		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, itemsArray);
 		if(settings.getSwipeMode() == Settings.MODE_NOTHING)
 		{
 			bookList.setAdapter(adapter);
@@ -384,10 +306,10 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	}
 
 	@Override
-	public void OnTaskFinished() {
+	public void OnTaskFinished(String result) {
 		
 		Gson gson = new Gson();
-		BookJsonAdapter adapter = gson.fromJson(downloader.getJsonResult(), BookJsonAdapter.class);
+		BookJsonAdapter adapter = gson.fromJson(result , BookJsonAdapter.class);
 		if(adapter == null)
 		{
 			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();

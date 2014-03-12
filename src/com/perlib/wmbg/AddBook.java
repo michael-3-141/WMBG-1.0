@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -53,11 +52,14 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
     Button btnAddBook;
     EditText etISBN;
     Button btnDownloadInfo;
-    Button btnScanISBN;
     EditText etEmail;
     DatePicker dpDueDate;
-	private ArrayAdapter<String> adapter;
+	ArrayAdapter<String> adapter;
 	Map<Integer, String> nameIdMap;
+	int mode;
+	
+	public static final int MODE_AUTO = 0;
+	public static final int MODE_MANUAL = 1;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -65,20 +67,26 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_addbook);
 	    
-	    Bundle b = getIntent().getExtras();
-	    items = b.getParcelableArrayList("items");
-	    
 	    etbookname = (EditText)findViewById(R.id.etBookName);
 	    etBookAuthor = (EditText)findViewById(R.id.etAuthorName);
 	    etLendedTo = (AutoCompleteTextView)findViewById(R.id.etLendedTo);
 	    btnAddBook = (Button)findViewById(R.id.btnAddBook);
 	    etISBN = (EditText)findViewById(R.id.etISBN);
 	    btnDownloadInfo = (Button)findViewById(R.id.btnDownloadInfo);
-	    btnScanISBN = (Button)findViewById(R.id.btnScanISBN);
 	    etEmail = (EditText)findViewById(R.id.etEmail);
 	    dpDueDate = (DatePicker)findViewById(R.id.dpDueDate);
 	    
-	    final IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+	    Bundle b = getIntent().getExtras();
+	    items = b.getParcelableArrayList("items");
+	    mode = b.getInt("mode");
+	    if(mode == MODE_AUTO)
+	    {
+	    	etbookname.setText(b.getString("name"));
+	    	etBookAuthor.setText(b.getString("author"));
+	    	etISBN.setVisibility(View.GONE);
+	    	btnDownloadInfo.setVisibility(View.GONE);
+	    }
+	    
 	    contactNameLoader = new GetContactNames(contactsListener, getContentResolver());
 	    startContactSearch();
 	   
@@ -111,7 +119,6 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 						dueDate = dueDateGc.getTimeInMillis()/1000;
 					}
 					items.add(new Book(bookname, bookAuthor ,lendedTo, email, lendedDate, dueDate));
-					btnScanISBN.setOnClickListener(this);
 					
 					Library.saveInfo(items);
 					
@@ -131,15 +138,6 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 			}
 		});
 	    
-	    
-	    btnScanISBN.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				scanIntegrator.initiateScan();
-				
-			}
-		});
 	    
 	    btnDownloadInfo.setOnClickListener(new OnClickListener() {
 			
@@ -207,11 +205,11 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	}
 
 	@Override
-	public void OnTaskFinished() {
+	public void OnTaskFinished(String result) {
 		
 		//Toast.makeText(getApplicationContext(), downloader.getJsonResult(), Toast.LENGTH_SHORT).show();
 		Gson gson = new Gson();
-		BookJsonAdapter adapter = gson.fromJson(downloader.getJsonResult(), BookJsonAdapter.class);
+		BookJsonAdapter adapter = gson.fromJson(result , BookJsonAdapter.class);
 		if(adapter == null)
 		{
 			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();

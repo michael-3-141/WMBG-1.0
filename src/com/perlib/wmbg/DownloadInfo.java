@@ -20,7 +20,6 @@ public class DownloadInfo extends AsyncTask<String, String, String> {
 	
 	public DownloadInfo(OnDownloadComplete listener) {
 		super();
-		jsonResult = "";
 		this.listener = listener;
 	}
 	
