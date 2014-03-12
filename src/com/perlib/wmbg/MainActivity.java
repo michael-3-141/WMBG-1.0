@@ -46,6 +46,7 @@ import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.book.Library;
 import com.perlib.wmbg.book.Settings;
+import com.perlib.wmbg.fortsevendeg.swipelistview.SwipeListView;
 
 public class MainActivity extends Activity implements OnDownloadComplete{
 
@@ -54,16 +55,16 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	Settings settings;
 	DownloadInfo downloader;
 	private OnDownloadComplete downloadListener;
-	ListView bookList;
+	SwipeListView bookList;
 	SimpleAdapter adapter;
-	SwipeDismissAdapter swipeAdapter;
+	//SwipeDismissAdapter swipeAdapter;
 	List<Map<String,String>> displayList = new ArrayList<Map<String,String>>();;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		bookList = (ListView)findViewById(R.id.bookList);
+		bookList = (SwipeListView)findViewById(R.id.bookList);
 		downloadListener = this;
 		
 		settings = Library.loadSettings(getApplicationContext());
@@ -74,7 +75,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 			items = b.getParcelableArrayList("items");
 		}
 		adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
-		swipeAdapter = new SwipeDismissAdapter(adapter ,new OnDismissCallback() {
+		/*swipeAdapter = new SwipeDismissAdapter(adapter ,new OnDismissCallback() {
 			
 			@Override
 			public void onDismiss(AbsListView listView, int[] reverseSortedPositions) {
@@ -90,9 +91,10 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 			    }
 				
 			}
-		});
+		});*/
 		refreshList();
-		
+		bookList.setOffsetLeft(50);
+		bookList.setOffsetRight(50);
 		
 		bookList.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -299,15 +301,15 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		//itemsArray = displayList.toArray(itemsArray);
 		//SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
 		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, itemsArray);
-		if(settings.getSwipeMode() == Settings.MODE_NOTHING)
-		{
+		//if(settings.getSwipeMode() == Settings.MODE_NOTHING)
+		//{
 			bookList.setAdapter(adapter);
-		}
-		else
-		{
-			bookList.setAdapter(swipeAdapter);
-			swipeAdapter.setAbsListView(bookList);
-		}
+		//}
+		//else
+		//{
+		//	bookList.setAdapter(swipeAdapter);
+		//	swipeAdapter.setAbsListView(bookList);
+		//}
 		adapter.notifyDataSetChanged();
 	}
 
@@ -323,7 +325,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 					
 					items.remove(position);
 					displayList.remove(position);
-					swipeAdapter.notifyDataSetChanged();
+					adapter.notifyDataSetChanged();
 					Library.saveInfo(items);
 				}
 			});
@@ -343,7 +345,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		{
 			items.remove(position);
 			displayList.remove(position);
-			swipeAdapter.notifyDataSetChanged();
+			adapter.notifyDataSetChanged();
 			Library.saveInfo(items);
 		}
 	}

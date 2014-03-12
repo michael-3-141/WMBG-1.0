@@ -8,10 +8,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
-    <ListView
+    <com.perlib.wmbg.fortsevendeg.swipelistview.SwipeListView
+        xmlns:swipe="http://schemas.android.com/apk/res_auto"
         android:id="@+id/bookList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
+        android:layout_height="wrap_content"
+        android:listSelector="#00000000"
+		swipe:swipeBackView="@+id/swipelist_backview"
+		swipe:swipeFrontView="@+id/swipelist_frontview"
+        swipe:swipeActionLeft="reveal"
+        swipe:swipeActionRight="reveal"
+        swipe:swipeMode="both"
+        swipe:swipeCloseAllItemsWhenMoveList="true"
+        swipe:swipeOpenOnLongPress="true"
+        swipe:swipeOffsetLeft="20px"
+        swipe:swipeOffsetRight="20px"
+    />
 
 </RelativeLayout>

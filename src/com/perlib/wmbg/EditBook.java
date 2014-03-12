@@ -28,7 +28,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 public class EditBook extends Activity implements OnContactLoadingComplete, OnEmailLoadingListener {
 
@@ -69,10 +68,13 @@ public class EditBook extends Activity implements OnContactLoadingComplete, OnEm
 	    GregorianCalendar editedDate = new GregorianCalendar();
 	    editedDate.setTimeInMillis(editedItem.getDueDate()*1000);
 	    dpDueDate.updateDate(editedDate.get(GregorianCalendar.YEAR), editedDate.get(GregorianCalendar.MONTH), editedDate.get(GregorianCalendar.DAY_OF_MONTH));
+	    contactNameLoader = new GetContactNames(contactsListener, getContentResolver());
 	    startContactSearch();
 	    
 	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, autoNames);
 	    etLendedTo.setAdapter(adapter);
+	    
+	    
 	    
 	    btnAddBook.setOnClickListener(new OnClickListener() {
 			

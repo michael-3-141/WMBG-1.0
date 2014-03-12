@@ -1,33 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
-
-    <TextView
-            android:id="@+id/text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_marginTop="8dip" />
-
-    <TextView
-            android:id="@+id/text2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-    <TextView
-            android:id="@+id/text3"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-    
-    <TextView
-        android:id="@+id/text4"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:id="@+id/swipelist_backview"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-</LinearLayout>
+        android:orientation="horizontal"
+        android:tag="swipelist_backview"
+        android:layout_gravity="center_vertical"
+        >
+        
+                <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="55px"
+                android:id="@+id/swipe_button1"
+                android:text="Button 1"/>
+                
+    </LinearLayout>
+	<LinearLayout
+	    		  android:id="@+id/swipelist_frontview"
+	    		  android:tag="swipelist_frontview"
+	              android:orientation="vertical"
+	              android:layout_width="match_parent"
+	              android:layout_height="match_parent"
+	              android:background="@color/black">
+	
+	    <TextView
+	            android:id="@+id/text1"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:textAppearance="?android:attr/textAppearanceMedium"
+	            android:layout_marginTop="8dip" />
+	
+	    <TextView
+	            android:id="@+id/text2"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:textAppearance="?android:attr/textAppearanceSmall"/>
+	
+	    <TextView
+	            android:id="@+id/text3"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:textAppearance="?android:attr/textAppearanceSmall"/>
+	    
+	    <TextView
+	        android:id="@+id/text4"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceSmall"/>
+	
+	</LinearLayout>
+</FrameLayout>
