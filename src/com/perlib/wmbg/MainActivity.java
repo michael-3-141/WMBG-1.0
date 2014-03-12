@@ -47,7 +47,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	ListView bookList;
 	SimpleAdapter adapter;
 	SwipeDismissAdapter swipeAdapter;
-	List<Map<String,String>> displayList = new ArrayList<Map<String,String>>();;
+	List<Map<String,String>> displayList = new ArrayList<Map<String,String>>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -382,6 +382,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	{
 		super.onStop();
 		EasyTracker.getInstance(this).activityStop(this);
+		Library.saveInfo(items);
 	}
 	
 }

@@ -54,6 +54,7 @@ public class EditBook extends Activity implements OnContactLoadingComplete, OnEm
 	    Bundle b = getIntent().getExtras();
 	    items = b.getParcelableArrayList("items");
 	    editPos = b.getInt("position");
+	    
 	    final EditText etbookname = (EditText)findViewById(R.id.etBookName);
 	    final EditText etBookAuthor = (EditText)findViewById(R.id.etAuthorName);
 	    etLendedTo = (AutoCompleteTextView)findViewById(R.id.etLendedTo);

@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -12,13 +14,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.perlib.wmbg.book.Book;
-import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.book.Library;
 
 public class ScanBook extends Activity {
@@ -31,6 +28,9 @@ public class ScanBook extends Activity {
 	
 	List<Book> items = new ArrayList<Book>();
 	List<Book> matchedItems = new ArrayList<Book>();
+	List<Integer> matchedItemsPos = new ArrayList<Integer>();
+	List<Book> matchedLendedItems = new ArrayList<Book>();
+	List<Integer> matchedLendedItemsPos = new ArrayList<Integer>();
 	Book result = new Book();
 	
 	/** Called when the activity is first created. */
@@ -53,18 +53,57 @@ public class ScanBook extends Activity {
 		tvBookName.setText(result.getName());
 		tvBookAuthor.setText(result.getAuthor());
 		
+		int j = 0;
 		for(Iterator<Book> i = items.iterator(); i.hasNext();)
 		{
 			Book item = i.next();
 			if(item.getName().equals(result.getName()))
 			{
 				matchedItems.add(item);
+				matchedItemsPos.add(j);
+				if(item.getLendedTo().length() > 0)
+				{
+					matchedLendedItems.add(item);
+					matchedLendedItemsPos.add(j);
+				}
+				j++;
 			}
 		}
-		if(matchedItems.size() < 0)
+		if(matchedItems.size() == 0)
 		{
 			btnReturnBook.setVisibility(View.GONE);
 			btnEditBook.setVisibility(View.GONE);
+		}
+		else
+		{
+			boolean lended = false;
+			boolean isFirst = true;
+			String display = getString(R.string.returnScannedBook);
+			for(Iterator<Book> i = matchedItems.iterator(); i.hasNext();)
+			{
+				Book item = i.next();
+				if(item.getLendedTo().length() > 0)
+				{
+					if(!lended)lended = true;
+					if(isFirst)
+					{
+						display += " " + item.getLendedTo();
+					}
+					else
+					{
+						display += " or " + item.getLendedTo();
+					}
+					isFirst = false;
+				}
+			}
+			if(!lended)
+			{
+				btnReturnBook.setVisibility(View.GONE);
+			}
+			else
+			{
+				btnReturnBook.setText(display);
+			}
 		}
 	    
 		
@@ -86,7 +125,46 @@ public class ScanBook extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				
+				if(matchedItems.size() == 1)
+				{
+					Book item = matchedItems.get(0);
+					item.setLendedTo("");
+					item.setDateLended(-1);
+					item.setDueDate(-1);
+					item.setEmail("");
+					items.set(matchedItemsPos.get(0), item);
+					Library.saveInfo(items);
+				}
+				else
+				{
+					List<String> display = new ArrayList<String>();
+					for(Iterator<Book> i = matchedLendedItems.iterator(); i.hasNext();)
+					{
+						Book item = i.next();
+						display.add(getString(R.string.lendedToDisplay)+item.getLendedTo());
+					}
+					String[] displayArray = new String[]{};
+					displayArray = display.toArray(displayArray);
+					AlertDialog.Builder duplicateDialog = new AlertDialog.Builder(ScanBook.this);
+					duplicateDialog.setTitle(getString(R.string.duplicateBooks)).setItems(displayArray, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							
+							Book item = matchedLendedItems.get(which);
+							item.setLendedTo("");
+							item.setDateLended(-1);
+							item.setDueDate(-1);
+							item.setEmail("");
+							items.set(matchedLendedItemsPos.get(which), item);
+							Library.saveInfo(items);
+							Intent main = new Intent(getApplicationContext(), MainActivity.class);
+							main.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
+							startActivity(main);
+						}
+					});
+					duplicateDialog.show();
+				}
 			}
 		});
 	    
@@ -94,9 +172,39 @@ public class ScanBook extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				if(matchedItems.size() == 1)
+				{
+					Intent editBook = new Intent(getApplicationContext(), EditBook.class);
+					editBook.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
+					editBook.putExtra("position", matchedItemsPos.get(0));
+					startActivity(editBook);
+				}
+				else
+				{
+					List<String> display = new ArrayList<String>();
+					for(Iterator<Book> i = matchedLendedItems.iterator(); i.hasNext();)
+					{
+						Book item = i.next();
+						display.add(getString(R.string.lendedToDisplay)+item.getLendedTo());
+					}
+					String[] displayArray = new String[]{};
+					displayArray = display.toArray(displayArray);
+					AlertDialog.Builder duplicateDialog = new AlertDialog.Builder(ScanBook.this);
+					duplicateDialog.setTitle(getString(R.string.duplicateBooks)).setItems(displayArray, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							
+							Intent editBook = new Intent(getApplicationContext(), EditBook.class);
+							editBook.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
+							editBook.putExtra("position", matchedLendedItemsPos.get(which));
+							startActivity(editBook);
+						}
+					});
+					duplicateDialog.show();
+				}
 			}
+			
 		});
 	}
 }

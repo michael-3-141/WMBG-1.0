@@ -14,8 +14,11 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -220,5 +223,64 @@ public class Library {
 		{
 			downloader.execute(isbn);
 		}
+	}
+	
+	public static void deleteItem(final int position, Settings settings, Context cx, DialogInterface.OnClickListener listener, List<Book> items)
+	{
+		if(settings.isConfirmDelete())
+		{
+			AlertDialog.Builder delete_builder = new AlertDialog.Builder(cx);
+			delete_builder.setPositiveButton(cx.getString(R.string.deleteYes) , listener);
+			delete_builder.setNegativeButton(cx.getString(R.string.deleteCancel), new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					
+					
+				}
+			});
+			delete_builder.setMessage(cx.getString(R.string.deleteConfirm) + ' ' + '"' + items.get(position).getName() + '"' + "?").setTitle(cx.getString(R.string.deleteConfirmTitle));
+			AlertDialog dialog = delete_builder.create();
+			dialog.show();
+		}
+		else
+		{
+			listener.onClick(null, 0);
+		}
+	}
+	
+	public static void returnItem(final int position, List<Book> items)
+	{
+		Book item = items.get(position);
+		item.setLendedTo("");
+		item.setEmail("");
+		item.setDateLended(-1);
+		item.setDueDate(-1);
+		items.set(position, item);
+		Library.saveInfo(items);
+	}
+	
+	public static void returnOrDeleteItem(final int position, final Context cx, final List<Book> items, final OnClickListener listener, final Settings settings)
+	{
+		AlertDialog.Builder delete_or_return_builder = new AlertDialog.Builder(cx);
+		delete_or_return_builder.setPositiveButton(cx.getString(R.string.chooseReturn) , new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				returnItem(position, items);
+			}
+		});
+		delete_or_return_builder.setNegativeButton(cx.getString(R.string.chooseDelete), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+				deleteItem(position, settings, cx, listener, items);
+			}
+		});
+		delete_or_return_builder.setMessage(cx.getString(R.string.returnOrDelete));
+		AlertDialog dialog = delete_or_return_builder.create();
+		dialog.show();
 	}
 }
