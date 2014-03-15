@@ -367,6 +367,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	public void onResume()
 	{
 		super.onResume();
+		items = Library.loadData();
 		refreshList();
 	}
 	

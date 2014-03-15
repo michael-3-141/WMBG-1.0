@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.Library;
 
@@ -125,15 +126,18 @@ public class ScanBook extends Activity {
 			@Override
 			public void onClick(View v) {
 				
-				if(matchedItems.size() == 1)
+				if(matchedLendedItems.size() == 1)
 				{
-					Book item = matchedItems.get(0);
+					Book item = matchedLendedItems.get(0);
 					item.setLendedTo("");
 					item.setDateLended(-1);
 					item.setDueDate(-1);
 					item.setEmail("");
-					items.set(matchedItemsPos.get(0), item);
+					items.set(matchedLendedItemsPos.get(0), item);
 					Library.saveInfo(items);
+					Intent main = new Intent(getApplicationContext(), MainActivity.class);
+					main.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
+					startActivity(main);
 				}
 				else
 				{
@@ -182,10 +186,17 @@ public class ScanBook extends Activity {
 				else
 				{
 					List<String> display = new ArrayList<String>();
-					for(Iterator<Book> i = matchedLendedItems.iterator(); i.hasNext();)
+					for(Iterator<Book> i = matchedItems.iterator(); i.hasNext();)
 					{
 						Book item = i.next();
-						display.add(getString(R.string.lendedToDisplay)+item.getLendedTo());
+						if(item.getLendedTo().length() < 1)
+						{
+							display.add(getString(R.string.lendedToDisplay) + getString(R.string.none));
+						}
+						else
+						{
+							display.add(getString(R.string.lendedToDisplay)+item.getLendedTo());
+						}
 					}
 					String[] displayArray = new String[]{};
 					displayArray = display.toArray(displayArray);
@@ -197,7 +208,7 @@ public class ScanBook extends Activity {
 							
 							Intent editBook = new Intent(getApplicationContext(), EditBook.class);
 							editBook.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
-							editBook.putExtra("position", matchedLendedItemsPos.get(which));
+							editBook.putExtra("position", matchedItemsPos.get(which));
 							startActivity(editBook);
 						}
 					});
@@ -206,5 +217,27 @@ public class ScanBook extends Activity {
 			}
 			
 		});
+	}
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
+		items = Library.loadData();
+	}
+	
+	@Override
+	public void onStart()
+	{
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+	
+	@Override
+	public void onStop()
+	{
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
+		Library.saveInfo(items);
 	}
 }

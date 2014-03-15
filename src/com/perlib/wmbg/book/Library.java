@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -282,5 +283,35 @@ public class Library {
 		delete_or_return_builder.setMessage(cx.getString(R.string.returnOrDelete));
 		AlertDialog dialog = delete_or_return_builder.create();
 		dialog.show();
+	}
+	
+	public static List<Book> loadData()
+	{
+		String fs = System.getProperty("file.separator");
+		File sd = Environment.getExternalStorageDirectory();
+		File listfile = new File(sd+fs+"booklist.txt");
+		List<Book> list = new ArrayList<Book>();
+		
+		if(listfile.exists())
+		{
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(listfile));
+				
+				String line;
+				Gson gson = new Gson();
+				Book[] bookArray = new Book[]{};
+				while((line = br.readLine()) != null)
+				{
+					bookArray = gson.fromJson(line, Book[].class);
+				}
+				list = new ArrayList<Book>(Arrays.asList(bookArray));
+				br.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return list;
 	}
 }

@@ -40,7 +40,6 @@ public class EditBook extends Activity implements OnContactLoadingComplete, OnEm
 	private ArrayAdapter<String> adapter;
 	GetContactNames contactNameLoader;
 	GetContactEmail contactEmailLoader;
-	OnContactLoadingComplete contactsListener = this;
 	OnEmailLoadingListener contactEmailListener = this;
 	EditText etEmail;
 	private HashMap<Integer, String> nameIdMap;
@@ -69,6 +68,7 @@ public class EditBook extends Activity implements OnContactLoadingComplete, OnEm
 	    GregorianCalendar editedDate = new GregorianCalendar();
 	    editedDate.setTimeInMillis(editedItem.getDueDate()*1000);
 	    dpDueDate.updateDate(editedDate.get(GregorianCalendar.YEAR), editedDate.get(GregorianCalendar.MONTH), editedDate.get(GregorianCalendar.DAY_OF_MONTH));
+	    contactNameLoader = new GetContactNames(this, getContentResolver());
 	    startContactSearch();
 	    
 	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, autoNames);
@@ -176,7 +176,7 @@ public class EditBook extends Activity implements OnContactLoadingComplete, OnEm
 		nameIdMap = result;
 		for(Entry<Integer, String> row : nameIdMap.entrySet())
 		{
-			if(row.getValue().length() == 0)
+			if(row.getValue().length() != 0)
 			{
 				adapter.add(row.getValue());
 			}
