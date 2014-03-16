@@ -46,7 +46,7 @@
    </string-array>
    <string name="swipeModeText">Select what will happen when you swipe a list item: </string>
    <string name="requiredBookNameError">The book name field is required. Please enter a book name and try again.</string>
-   <string name="dueDate">Due date:</string>
+   <string name="dateLended">When was this book lended:</string>
    <string name="searchBook">Serach Books</string>
    <string name="scanBook">Scan Book</string>
    <string name="manualAddBook">Manually Add Book</string>
@@ -55,4 +55,5 @@
    <string name="returnScannedBook">Return book from</string>
    <string name="editScannedBook">Edit this book</string>
    <string name="ok">OK</string>
+   <string name="dateLendedDisplay">Lended On: </string>
 </resources>

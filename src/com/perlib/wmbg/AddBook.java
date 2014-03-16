@@ -9,12 +9,13 @@ import java.util.Map.Entry;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +24,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -35,7 +35,7 @@ import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.book.Library;
 
-public class AddBook extends Activity implements OnDownloadComplete, OnContactLoadingComplete, OnEmailLoadingListener {
+public class AddBook extends ActionBarActivity implements OnDownloadComplete, OnContactLoadingComplete, OnEmailLoadingListener {
 
 	List<Book> items = new ArrayList<Book>();
 	OnDownloadComplete downloadListener = this;
@@ -53,7 +53,6 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
     EditText etISBN;
     Button btnDownloadInfo;
     EditText etEmail;
-    DatePicker dpDueDate;
 	ArrayAdapter<String> adapter;
 	Map<Integer, String> nameIdMap;
 	int mode;
@@ -67,6 +66,9 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_addbook);
 	    
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+	    
 	    etbookname = (EditText)findViewById(R.id.etBookName);
 	    etBookAuthor = (EditText)findViewById(R.id.etAuthorName);
 	    etLendedTo = (AutoCompleteTextView)findViewById(R.id.etLendedTo);
@@ -74,7 +76,6 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 	    etISBN = (EditText)findViewById(R.id.etISBN);
 	    btnDownloadInfo = (Button)findViewById(R.id.btnDownloadInfo);
 	    etEmail = (EditText)findViewById(R.id.etEmail);
-	    dpDueDate = (DatePicker)findViewById(R.id.dpDueDate);
 	    
 	    Bundle b = getIntent().getExtras();
 	    items = b.getParcelableArrayList("items");
@@ -104,21 +105,9 @@ public class AddBook extends Activity implements OnDownloadComplete, OnContactLo
 				String email = etEmail.getText().toString();
 				if(!(bookname.length() == 0))
 				{
-					long lendedDate;
-					long dueDate;
-					if(lendedTo.length() == 0)
-					{
-						lendedDate = -1;
-						dueDate = -1;
-					}
-					else
-					{
-						GregorianCalendar lendedDateGc = new GregorianCalendar();
-						lendedDate = lendedDateGc.getTimeInMillis()/1000;
-						GregorianCalendar dueDateGc = new GregorianCalendar(dpDueDate.getYear(), dpDueDate.getMonth(), dpDueDate.getDayOfMonth());
-						dueDate = dueDateGc.getTimeInMillis()/1000;
-					}
-					items.add(new Book(bookname, bookAuthor ,lendedTo, email, lendedDate, dueDate));
+					GregorianCalendar dateLendedGc = new GregorianCalendar();
+					long dateLended = dateLendedGc.getTimeInMillis()/1000;
+					items.add(new Book(bookname, bookAuthor ,lendedTo, email, dateLended));
 					
 					Library.saveInfo(items);
 					

@@ -10,16 +10,14 @@ public class Book implements Parcelable {
 	private String lendedTo;
 	private String email;
 	private long dateLended;
-	private long dueDate;
 	
-	public Book(String name, String author, String lendedTo, String email, long dateLended, long dueDate)
+	public Book(String name, String author, String lendedTo, String email, long dateLended)
 	{
 		this.name = name;
 		this.author = author;
 		this.lendedTo = lendedTo;
 		this.email = email;
 		this.dateLended = dateLended;
-		this.dueDate = dueDate;
 	}
 	
 	public Book()
@@ -38,7 +36,6 @@ public class Book implements Parcelable {
 		this.lendedTo = dest.readString();
 		this.email = dest.readString();
 		this.dateLended = dest.readLong();
-		this.dueDate = dest.readLong();
 	}
 
 	public String getName() {
@@ -81,7 +78,6 @@ public class Book implements Parcelable {
 		dest.writeString(this.lendedTo);
 		dest.writeString(this.email);
 		dest.writeLong(this.dateLended);
-		dest.writeLong(this.dueDate);
 		
 	}
 	
@@ -111,13 +107,5 @@ public class Book implements Parcelable {
 
 	public void setDateLended(long dateLended) {
 		this.dateLended = dateLended;
-	}
-
-	public long getDueDate() {
-		return dueDate;
-	}
-
-	public void setDueDate(long dueDate) {
-		this.dueDate = dueDate;
 	}
 }

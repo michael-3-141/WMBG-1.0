@@ -12,17 +12,54 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <application android:icon="@drawable/ic_launcher" android:allowBackup="true" android:label="@string/app_name">
-        <activity android:name="MainActivity"></activity>
-        <activity android:name="AddBook"></activity>
-        <activity android:name="EditBook"></activity>
-        <activity android:name="SettingsActivity"></activity>
-        <activity android:name="MainMenu">
+        <activity 
+            android:name="MainActivity"
+            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName="com.perlib.wmbg.MainMenu">
+	            <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.perlib.wmbg.MainMenu" />
+        </activity>
+        <activity 
+            android:name="AddBook"
+            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName="com.perlib.wmbg.MainMenu">
+	            <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.perlib.wmbg.MainMenu" />
+        </activity>
+        <activity 
+            android:name="EditBook"
+            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName="com.perlib.wmbg.MainActivity">
+	            <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.perlib.wmbg.MainActivity" />
+        </activity>
+        <activity 
+            android:name="SettingsActivity"
+            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName="com.perlib.wmbg.MainMenu">
+	            <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.perlib.wmbg.MainMenu" />
+        </activity>
+        <activity 
+            android:name="MainMenu"
+            android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             	<category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="ScanBook"></activity>
+        <activity 
+            android:name="ScanBook"
+            android:theme="@style/Theme.AppCompat"
+            android:parentActivityName="com.perlib.wmbg.MainMenu">
+	            <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.perlib.wmbg.MainMenu" />
+        </activity>
     </application>
 
 </manifest>

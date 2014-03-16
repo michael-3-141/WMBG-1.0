@@ -42,10 +42,10 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dueDate" />
+        android:text="@string/dateLended" />
     
     <DatePicker
-        android:id="@+id/dpDueDate"
+        android:id="@+id/dpDateLended"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:calendarViewShown="false" />

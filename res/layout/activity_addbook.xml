@@ -54,18 +54,6 @@
 	        android:ems="10"
 	        android:hint="@string/email"
 	        android:inputType="textEmailAddress" />
-
-	    <TextView
-	        android:id="@+id/textView1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/dueDate" />
-	
-	    <DatePicker
-	        android:id="@+id/dpDueDate"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:calendarViewShown="false" />
 	
 	    <Button
 	        android:id="@+id/btnAddBook"

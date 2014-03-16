@@ -77,6 +77,8 @@ public class MainMenu extends Activity implements OnDownloadComplete {
 			public void onClick(View v) {
 				
 				Intent addBook = new Intent(getApplicationContext(), AddBook.class);
+				addBook.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
+				addBook.putExtra("mode", AddBook.MODE_MANUAL);
 				startActivity(addBook);
 			}
 		});

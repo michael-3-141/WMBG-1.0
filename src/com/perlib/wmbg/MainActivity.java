@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -17,6 +16,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +39,7 @@ import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.book.Library;
 import com.perlib.wmbg.book.Settings;
 
-public class MainActivity extends Activity implements OnDownloadComplete{
+public class MainActivity extends ActionBarActivity implements OnDownloadComplete{
 
 	List<Book> items = new ArrayList<Book>(); 
 	Settings settings;
@@ -52,6 +53,9 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		bookList = (ListView)findViewById(R.id.bookList);
 		
@@ -145,7 +149,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
@@ -175,6 +179,7 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		Intent addbook = new Intent(getApplicationContext(), AddBook.class);
 		Bundle b = new Bundle();
 		b.putParcelableArrayList("items", (ArrayList<? extends Parcelable>) items);
+		b.putInt("mode", AddBook.MODE_MANUAL);
 		addbook.putExtras(b);
 		startActivity(addbook);
 	}
@@ -206,16 +211,14 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		    {
 		    	lendedtotext = item.getLendedTo();
 		    }
-		    if(!(item.getDateLended() == -1 && item.getDueDate() == -1))
+		    if(!(item.getDateLended() == -1))
 		    {
 			    GregorianCalendar gcDateLended = new GregorianCalendar();
 			    gcDateLended.setTimeInMillis(item.getDateLended()*1000);
-			    GregorianCalendar gcDueDate = new GregorianCalendar();
-			    gcDueDate.setTimeInMillis(item.getDueDate()*1000);
 			    SimpleDateFormat format = new SimpleDateFormat("d/M/y", Locale.US);
-			    dateText = format.format(gcDateLended.getTime()) + " - " + format.format(gcDueDate.getTime());
+			    dateText = getString(R.string.lendedToDisplay) + format.format(gcDateLended.getTime());
 		    }
-		    stringMap.put("lendedto", getString(R.string.lendedToDisplay) + lendedtotext);
+		    stringMap.put("lendedto", getString(R.string.dateLendedDisplay) + lendedtotext);
 		    stringMap.put("Author", getString(R.string.by) + item.getAuthor());
 		    stringMap.put("date", dateText);
 		    displayList.add(stringMap);
@@ -275,7 +278,6 @@ public class MainActivity extends Activity implements OnDownloadComplete{
 		item.setLendedTo("");
 		item.setEmail("");
 		item.setDateLended(-1);
-		item.setDueDate(-1);
 		items.set(position, item);
 		Library.saveInfo(items);
 		refreshList();

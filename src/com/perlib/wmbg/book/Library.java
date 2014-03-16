@@ -256,7 +256,6 @@ public class Library {
 		item.setLendedTo("");
 		item.setEmail("");
 		item.setDateLended(-1);
-		item.setDueDate(-1);
 		items.set(position, item);
 		Library.saveInfo(items);
 	}

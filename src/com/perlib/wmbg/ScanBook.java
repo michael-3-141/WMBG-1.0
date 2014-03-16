@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -19,7 +20,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.Library;
 
-public class ScanBook extends Activity {
+public class ScanBook extends ActionBarActivity {
 
 	TextView tvBookName;
 	TextView tvBookAuthor;
@@ -38,8 +39,10 @@ public class ScanBook extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	
 	    setContentView(R.layout.activity_scanbook);
+	    
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	    
 	    tvBookName = (TextView) findViewById(R.id.tvBookName);
 	    tvBookAuthor = (TextView) findViewById(R.id.tvBookAuthor);
@@ -131,7 +134,6 @@ public class ScanBook extends Activity {
 					Book item = matchedLendedItems.get(0);
 					item.setLendedTo("");
 					item.setDateLended(-1);
-					item.setDueDate(-1);
 					item.setEmail("");
 					items.set(matchedLendedItemsPos.get(0), item);
 					Library.saveInfo(items);
@@ -158,7 +160,6 @@ public class ScanBook extends Activity {
 							Book item = matchedLendedItems.get(which);
 							item.setLendedTo("");
 							item.setDateLended(-1);
-							item.setDueDate(-1);
 							item.setEmail("");
 							items.set(matchedLendedItemsPos.get(which), item);
 							Library.saveInfo(items);

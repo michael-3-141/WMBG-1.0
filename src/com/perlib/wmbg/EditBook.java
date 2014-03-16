@@ -11,12 +11,13 @@ import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.Library;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,14 +30,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class EditBook extends Activity implements OnContactLoadingComplete, OnEmailLoadingListener {
+public class EditBook extends ActionBarActivity implements OnContactLoadingComplete, OnEmailLoadingListener {
 
 	List<Book> items = new ArrayList<Book>();
 	int editPos;
 	Book editedItem;
 	List<String> autoNames = new ArrayList<String>();
 	AutoCompleteTextView etLendedTo;
-	DatePicker dpDueDate;
+	DatePicker dpDateLended;
 	private ArrayAdapter<String> adapter;
 	GetContactNames contactNameLoader;
 	GetContactEmail contactEmailLoader;
@@ -49,6 +50,8 @@ public class EditBook extends Activity implements OnContactLoadingComplete, OnEm
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_editbook);
 	    
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 	    
 	    Bundle b = getIntent().getExtras();
 	    items = b.getParcelableArrayList("items");
@@ -59,15 +62,15 @@ public class EditBook extends Activity implements OnContactLoadingComplete, OnEm
 	    etLendedTo = (AutoCompleteTextView)findViewById(R.id.etLendedTo);
 	    final Button btnAddBook = (Button)findViewById(R.id.btnAddBook);
 	    etEmail = (EditText)findViewById(R.id.etEmail);
-	    dpDueDate = (DatePicker)findViewById(R.id.dpDueDate);
+	    dpDateLended = (DatePicker)findViewById(R.id.dpDateLended);
 	    editedItem = items.get(editPos);
 	    etbookname.setText(editedItem.getName());
 	    etBookAuthor.setText(editedItem.getAuthor());
 	    etLendedTo.setText(editedItem.getLendedTo());
 	    etEmail.setText(editedItem.getEmail());
 	    GregorianCalendar editedDate = new GregorianCalendar();
-	    editedDate.setTimeInMillis(editedItem.getDueDate()*1000);
-	    dpDueDate.updateDate(editedDate.get(GregorianCalendar.YEAR), editedDate.get(GregorianCalendar.MONTH), editedDate.get(GregorianCalendar.DAY_OF_MONTH));
+	    editedDate.setTimeInMillis(editedItem.getDateLended()*1000);
+	    dpDateLended.updateDate(editedDate.get(GregorianCalendar.YEAR), editedDate.get(GregorianCalendar.MONTH), editedDate.get(GregorianCalendar.DAY_OF_MONTH));
 	    contactNameLoader = new GetContactNames(this, getContentResolver());
 	    startContactSearch();
 	    
@@ -85,19 +88,9 @@ public class EditBook extends Activity implements OnContactLoadingComplete, OnEm
 				String email = etEmail.getText().toString();
 				if(!(bookname.length() == 0))
 				{
-					long lendedDate;
-					if(lendedTo != editedItem.getLendedTo())
-					{
-						GregorianCalendar lendedDateGc = new GregorianCalendar();
-						lendedDate = lendedDateGc.getTimeInMillis()/1000;
-					}
-					else
-					{
-						lendedDate = editedItem.getDateLended();
-					}
-					GregorianCalendar dueDateGc = new GregorianCalendar(dpDueDate.getYear(), dpDueDate.getMonth(), dpDueDate.getDayOfMonth());
-					long dueDate = dueDateGc.getTimeInMillis()/1000;
-					items.set(editPos, new Book(bookname, bookAuthor ,lendedTo, email, lendedDate, dueDate));
+					GregorianCalendar dateLendedGc = new GregorianCalendar(dpDateLended.getYear(), dpDateLended.getMonth(), dpDateLended.getDayOfMonth());
+					long dateLended = dateLendedGc.getTimeInMillis()/1000;
+					items.set(editPos, new Book(bookname, bookAuthor ,lendedTo, email, dateLended));
 					
 					Library.saveInfo(items);
 					

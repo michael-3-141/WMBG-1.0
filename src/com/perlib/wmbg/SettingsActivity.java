@@ -1,8 +1,9 @@
 package com.perlib.wmbg;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -15,7 +16,7 @@ import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Library;
 import com.perlib.wmbg.book.Settings;
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends ActionBarActivity {
 
 	EditText customMessage;
 	Button btnSave;
@@ -26,8 +27,11 @@ public class SettingsActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	
 	    setContentView(R.layout.activity_settings);
+	    
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		
 	    customMessage = (EditText) findViewById(R.id.customMessage);
 	    btnSave = (Button) findViewById(R.id.btnSave);
 	    tbDeleteConfirm = (ToggleButton)findViewById(R.id.tbDeleteConfirm);
