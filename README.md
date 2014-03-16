@@ -10,4 +10,4 @@ That's the idea behind WMBG. WMBG lets you easily write down all the books you l
 2. You fill in the name of the person and his email, and when you want to send reminders to him.
 3. Once he returns the book, you scan the code again and the book gets removed from the list.
 
-WMBG is in early development stages, most of these features aren't implemented yet, but the app is now available on Google Play!
+WMBG is in early development stages, most of these features aren't implemented yet, but the app is available on Google Play!
