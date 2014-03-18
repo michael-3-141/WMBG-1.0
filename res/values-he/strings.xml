@@ -46,5 +46,5 @@
    </string-array>
    <string name="swipeModeText">סמן מה אתה רוצה שיקרה כשאתה סוחב את אחד הספרים ברשימה:</string>
    <string name="requiredBookNameError">שם הספר הוא שדה חובה. מלא אותו ונסה שוב.</string>
-   <string name="dueDate">תאריך להחזרת הספר:</string>
+   <string name="dateLended">תאריך להחזרת הספר:</string>
 </resources>

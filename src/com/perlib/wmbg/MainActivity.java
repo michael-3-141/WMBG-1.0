@@ -18,22 +18,24 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AbsListView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
-import com.perlib.wmbg.R;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
+import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.book.Library;
@@ -48,6 +50,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	ListView bookList;
 	SimpleAdapter adapter;
 	SwipeDismissAdapter swipeAdapter;
+	EditText etSearch;
 	List<Map<String,String>> displayList = new ArrayList<Map<String,String>>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		bookList = (ListView)findViewById(R.id.bookList);
+		etSearch = (EditText) findViewById(R.id.etSearch);
 		
 		settings = Library.loadSettings(getApplicationContext());
 		
@@ -86,6 +90,27 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		});
 		refreshList();
 		
+		etSearch.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				MainActivity.this.adapter.getFilter().filter(s);
+				
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		bookList.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -94,30 +119,48 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 					final int position, long id) {
 				
 				AlertDialog.Builder options_builder = new AlertDialog.Builder(MainActivity.this);
-				options_builder.setTitle(getString(R.string.options)).setItems(getResources().getStringArray(R.array.options_array), new OnClickListener() {
+				String[] display;
+				if(items.get(position).isLended())
+				{
+					display = new String[]{getString(R.string.sendReminder), getString(R.string.markAsReturned), getString(R.string.delete)};
+				}
+				else
+				{
+					display = new String[]{getString(R.string.delete)};
+				}
+				options_builder.setTitle(getString(R.string.options)).setItems(display, new OnClickListener() {
 					
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						
-						switch(which){
-						case 0:
+						if(items.get(position).isLended())
+						{
+							switch(which){
+							case 0:
+								
+								String uriText = null;
+								uriText =
+								"mailto:"+items.get(position).getEmail() + 
+								"?subject=" + Uri.encode(getString(R.string.emailSubject), "UTF-8") + 
+								"&body=" + Uri.encode(settings.getEmailMessage().replaceAll("@book@", items.get(position).getName()));
+								Uri uri = Uri.parse(uriText);
+						        Intent myActivity2 = new Intent(Intent.ACTION_SENDTO);                              
+						        myActivity2.setData(uri);
+						        startActivity(Intent.createChooser(myActivity2, getString(R.string.sendEmail)));
+								break;
+							case 1:
+								returnItem(position);
+								break;
+							case 2:
+								deleteItem(position);
+								break;
+							default:
+								break;
+							}
+						}
+						else
+						{
 							deleteItem(position);
-							break;
-						case 1:
-							String uriText = null;
-							uriText =
-							"mailto:"+items.get(position).getEmail() + 
-							"?subject=" + Uri.encode(getString(R.string.emailSubject), "UTF-8") + 
-							"&body=" + Uri.encode(settings.getEmailMessage().replaceAll("@book@", items.get(position).getName()));
-							Uri uri = Uri.parse(uriText);
-					        Intent myActivity2 = new Intent(Intent.ACTION_SENDTO);                              
-					        myActivity2.setData(uri);
-					        startActivity(Intent.createChooser(myActivity2, getString(R.string.sendEmail)));
-							break;
-						case 2:
-							returnItem(position);
-						default:
-							break;
 						}
 					}
 				});
@@ -216,9 +259,9 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 			    GregorianCalendar gcDateLended = new GregorianCalendar();
 			    gcDateLended.setTimeInMillis(item.getDateLended()*1000);
 			    SimpleDateFormat format = new SimpleDateFormat("d/M/y", Locale.US);
-			    dateText = getString(R.string.lendedToDisplay) + format.format(gcDateLended.getTime());
+			    dateText = getString(R.string.dateLendedDisplay) + format.format(gcDateLended.getTime());
 		    }
-		    stringMap.put("lendedto", getString(R.string.dateLendedDisplay) + lendedtotext);
+		    stringMap.put("lendedto", getString(R.string.lendedToDisplay) + lendedtotext);
 		    stringMap.put("Author", getString(R.string.by) + item.getAuthor());
 		    stringMap.put("date", dateText);
 		    displayList.add(stringMap);

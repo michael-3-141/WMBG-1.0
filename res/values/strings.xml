@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name">Where\'d My Book Go?</string>
     <string name="addbook">Add New Book</string>
@@ -19,11 +19,9 @@
     <string name="noConnection">You are not connected to the internet. Please verify that you are connected and try again.</string>
     <string name="scanIsbnBarcode">Scan ISBN Barcode</string>
     <string name="email">Lended To Email (Optional)</string>
-    <string-array name="options_array">
-        <item >Delete</item>
-        <item >Send Reminder</item>
-        <item >Mark As Returned</item>
-    </string-array>
+    <string name="delete">Delete</string>
+    <string name="sendReminder">Send Reminder</string>
+    <string name="markAsReturned">Mark As Returned</string>
     <string name="options">Options</string>
     <string name="emailSubject">Lended Book Reminder</string>
     <string name="emailBodyA">Hi, you have my book: \&quot;</string>
@@ -56,4 +54,5 @@
    <string name="editScannedBook">Edit this book</string>
    <string name="ok">OK</string>
    <string name="dateLendedDisplay">Lended On: </string>
+   <string name="search">Search</string>
 </resources>

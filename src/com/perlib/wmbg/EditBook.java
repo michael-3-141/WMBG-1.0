@@ -11,7 +11,9 @@ import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.Library;
 
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,6 +45,9 @@ public class EditBook extends ActionBarActivity implements OnContactLoadingCompl
 	GetContactEmail contactEmailLoader;
 	OnEmailLoadingListener contactEmailListener = this;
 	EditText etEmail;
+	Button btnReturnBook;
+	Button btnSendReminder;
+	Button btnDelete;
 	private HashMap<Integer, String> nameIdMap;
 	/** Called when the activity is first created. */
 	@Override
@@ -63,6 +68,10 @@ public class EditBook extends ActionBarActivity implements OnContactLoadingCompl
 	    final Button btnAddBook = (Button)findViewById(R.id.btnAddBook);
 	    etEmail = (EditText)findViewById(R.id.etEmail);
 	    dpDateLended = (DatePicker)findViewById(R.id.dpDateLended);
+	    btnDelete = (Button) findViewById(R.id.btnDelete);
+	    btnReturnBook = (Button) findViewById(R.id.btnReturnBook);
+	    btnSendReminder = (Button) findViewById(R.id.btnSendReminder);
+	    
 	    editedItem = items.get(editPos);
 	    etbookname.setText(editedItem.getName());
 	    etBookAuthor.setText(editedItem.getAuthor());
@@ -76,6 +85,61 @@ public class EditBook extends ActionBarActivity implements OnContactLoadingCompl
 	    
 	    adapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, autoNames);
 	    etLendedTo.setAdapter(adapter);
+	    
+	    if(!editedItem.isLended())
+	    {
+	    	btnReturnBook.setVisibility(View.GONE);
+	    	btnSendReminder.setVisibility(View.GONE);
+	    }
+	    
+	    btnDelete.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				Library.deleteItem(editPos, Library.loadSettings(getApplicationContext()), EditBook.this , new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+						items.remove(editPos);
+						Library.saveInfo(items);
+						Intent main = new Intent(getApplicationContext(), MainActivity.class);
+						main.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
+						startActivity(main);
+					}
+				}, items);
+				
+			}
+		});
+	    
+	    btnReturnBook.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				items = Library.returnItem(editPos, items);
+				Intent main = new Intent(getApplicationContext(), MainActivity.class);
+				main.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
+				startActivity(main);
+			}
+		});
+	    
+	    btnSendReminder.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String uriText = null;
+				uriText =
+				"mailto:" + editedItem.getEmail() + 
+				"?subject=" + Uri.encode(getString(R.string.emailSubject), "UTF-8") + 
+				"&body=" + Uri.encode(Library.loadSettings(getApplicationContext()).getEmailMessage().replaceAll("@book@", editedItem.getName()));
+				Uri uri = Uri.parse(uriText);
+		        Intent myActivity2 = new Intent(Intent.ACTION_SENDTO);                              
+		        myActivity2.setData(uri);
+		        startActivity(Intent.createChooser(myActivity2, getString(R.string.sendEmail)));
+			}
+		});
 	    
 	    btnAddBook.setOnClickListener(new OnClickListener() {
 			

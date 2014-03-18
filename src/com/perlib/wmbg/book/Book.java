@@ -108,4 +108,9 @@ public class Book implements Parcelable {
 	public void setDateLended(long dateLended) {
 		this.dateLended = dateLended;
 	}
+	
+	public boolean isLended()
+	{
+		return this.lendedTo.length() > 0;
+	}
 }

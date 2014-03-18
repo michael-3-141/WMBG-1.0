@@ -250,7 +250,7 @@ public class Library {
 		}
 	}
 	
-	public static void returnItem(final int position, List<Book> items)
+	public static List<Book> returnItem(final int position, List<Book> items)
 	{
 		Book item = items.get(position);
 		item.setLendedTo("");
@@ -258,6 +258,7 @@ public class Library {
 		item.setDateLended(-1);
 		items.set(position, item);
 		Library.saveInfo(items);
+		return items;
 	}
 	
 	public static void returnOrDeleteItem(final int position, final Context cx, final List<Book> items, final OnClickListener listener, final Settings settings)
