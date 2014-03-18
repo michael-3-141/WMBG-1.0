@@ -3,13 +3,16 @@ package com.perlib.wmbg.book;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+
 public class Book implements Parcelable {
 	
-	private String name;
-	private String author;
-	private String lendedTo;
-	private String email;
-	private long dateLended;
+	@Expose private String name;
+	@Expose private String author;
+	@Expose private String lendedTo;
+	@Expose private String email;
+	@Expose private long dateLended;
+
 	
 	public Book(String name, String author, String lendedTo, String email, long dateLended)
 	{
@@ -31,7 +34,6 @@ public class Book implements Parcelable {
 	private Book(Parcel dest)
 	{
 		this.name = dest.readString();
-		//dest.readStringArray(this.author);
 		this.author = dest.readString();
 		this.lendedTo = dest.readString();
 		this.email = dest.readString();
@@ -65,13 +67,11 @@ public class Book implements Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
 		
 		dest.writeString(this.name);
 		dest.writeString(this.author);

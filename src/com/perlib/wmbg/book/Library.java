@@ -55,7 +55,7 @@ public class Library {
 				BufferedWriter bw = new BufferedWriter(fw);
 				Book[] bookArray = new Book[]{};
 				bookArray = list.toArray(bookArray);
-				Gson gson = new Gson();
+				Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 				String json = gson.toJson(bookArray);
 				//Log.d("json", json);
 				bw.write(json+eol);
