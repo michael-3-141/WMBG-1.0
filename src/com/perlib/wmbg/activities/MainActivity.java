@@ -16,7 +16,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
@@ -196,45 +195,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()){
-			case R.id.addbook:
-				goto_newbook();
-				return true;
-			case R.id.settings:
-				goto_settings();
-				return true;
-			default:
-				return false;
-		
-		}
-	}
-	
 
-	private void goto_settings() {
-		Intent settings = new Intent(getApplicationContext(), SettingsActivity.class);
-		startActivity(settings);
-		
-	}
-
-	private void goto_newbook() {
-		
-		Intent addbook = new Intent(getApplicationContext(), AddBook.class);
-		Bundle b = new Bundle();
-		b.putParcelableArrayList("items", (ArrayList<? extends Parcelable>) items);
-		b.putInt("mode", AddBook.MODE_MANUAL);
-		addbook.putExtras(b);
-		startActivity(addbook);
-	}
-	
 	private void goto_editbook(int position) {
 		
 		Intent addbook = new Intent(getApplicationContext(), EditBook.class);
