@@ -146,7 +146,7 @@ public class MainMenu extends Activity implements OnDownloadComplete {
 		
 		Intent scanBook = new Intent(getApplicationContext(), ScanBook.class);
 		scanBook.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
-		scanBook.putExtra("result", resultBook);
+		scanBook.putExtra("result", (Parcelable) resultBook);
 		startActivity(scanBook);
 	}
 

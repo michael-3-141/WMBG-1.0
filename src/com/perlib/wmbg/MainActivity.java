@@ -1,12 +1,8 @@
 package com.perlib.wmbg;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import android.app.AlertDialog;
@@ -29,7 +25,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -48,7 +43,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	DownloadInfo downloader;
 	OnDownloadComplete downloadListener = this;
 	ListView bookList;
-	SimpleAdapter adapter;
+	BookAdapter adapter;
 	SwipeDismissAdapter swipeAdapter;
 	EditText etSearch;
 	List<Map<String,String>> displayList = new ArrayList<Map<String,String>>();
@@ -70,7 +65,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 			Bundle b = getIntent().getExtras();
 			items = b.getParcelableArrayList("items");
 		}
-		adapter = new SimpleAdapter(getApplicationContext(), displayList, R.layout.simple_list_item_3, new String[] {"name", "Author", "lendedto","date"}, new int[] {R.id.text1,R.id.text2,R.id.text3,R.id.text4});
+		adapter = BookAdapter.CreateBookAdapter(items, getApplicationContext());
 		swipeAdapter = new SwipeDismissAdapter(adapter ,new OnDismissCallback() {
 			
 			@Override
@@ -88,7 +83,16 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 				
 			}
 		});
-		refreshList();
+		
+		if(settings.getSwipeMode() == Settings.MODE_NOTHING)
+		{
+			bookList.setAdapter(adapter);
+		}
+		else
+		{
+			bookList.setAdapter(swipeAdapter);
+			swipeAdapter.setAbsListView(bookList);
+		}
 		
 		etSearch.addTextChangedListener(new TextWatcher() {
 			
@@ -239,42 +243,6 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	
 	private void refreshList()
 	{
-		displayList.clear();
-		for(Iterator<Book> i = items.iterator(); i.hasNext(); ) {
-		    Book item = i.next();
-		    Map<String,String> stringMap = new HashMap<String,String>();
-		    stringMap.put("name", item.getName());
-		    String lendedtotext = "";
-		    String dateText = "";
-		    if(item.getLendedTo().length() == 0)
-		    {
-		    	lendedtotext = getString(R.string.none);
-		    }
-		    else
-		    {
-		    	lendedtotext = item.getLendedTo();
-		    }
-		    if(!(item.getDateLended() == -1))
-		    {
-			    GregorianCalendar gcDateLended = new GregorianCalendar();
-			    gcDateLended.setTimeInMillis(item.getDateLended()*1000);
-			    SimpleDateFormat format = new SimpleDateFormat("d/M/y", Locale.US);
-			    dateText = getString(R.string.dateLendedDisplay) + format.format(gcDateLended.getTime());
-		    }
-		    stringMap.put("lendedto", getString(R.string.lendedToDisplay) + lendedtotext);
-		    stringMap.put("Author", getString(R.string.by) + item.getAuthor());
-		    stringMap.put("date", dateText);
-		    displayList.add(stringMap);
-		}
-		if(settings.getSwipeMode() == Settings.MODE_NOTHING)
-		{
-			bookList.setAdapter(adapter);
-		}
-		else
-		{
-			bookList.setAdapter(swipeAdapter);
-			swipeAdapter.setAbsListView(bookList);
-		}
 		adapter.notifyDataSetChanged();
 	}
 
