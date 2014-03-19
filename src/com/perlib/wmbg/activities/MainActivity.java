@@ -67,8 +67,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 			Bundle b = getIntent().getExtras();
 			items = b.getParcelableArrayList("items");
 		}
-		adapter = BookAdapter.CreateBookAdapter(items, getApplicationContext());
-		//adapter = new BookAdapter(items, getApplicationContext());
+		adapter = new BookAdapter(items, getApplicationContext());
 		swipeAdapter = new SwipeDismissAdapter(adapter ,new OnDismissCallback() {
 			
 			@Override
