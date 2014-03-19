@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <application android:icon="@drawable/ic_launcher" android:allowBackup="true" android:label="@string/app_name" android:name=".custom.WMBGApplication">
         <activity 
-            android:name="MainActivity"
+            android:name=".activities.MainActivity"
             android:theme="@style/Theme.AppCompat"
             android:parentActivityName="com.perlib.wmbg.activities.MainMenu"
             android:windowSoftInputMode="stateHidden">
@@ -22,7 +22,7 @@
 	            android:value="com.perlib.wmbg.activities.MainMenu" />
         </activity>
         <activity 
-            android:name="AddBook"
+            android:name=".activities.AddBook"
             android:theme="@style/Theme.AppCompat"
             android:parentActivityName="com.perlib.wmbg.activities.MainMenu">
 	            <meta-data
@@ -30,7 +30,7 @@
 	            android:value="com.perlib.wmbg.activities.MainMenu" />
         </activity>
         <activity 
-            android:name="EditBook"
+            android:name=".activities.EditBook"
             android:theme="@style/Theme.AppCompat"
             android:parentActivityName="com.perlib.wmbg.activities.MainActivity">
 	            <meta-data
@@ -38,7 +38,7 @@
 	            android:value="com.perlib.wmbg.MainActivity" />
         </activity>
         <activity 
-            android:name="SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:theme="@style/Theme.AppCompat"
             android:parentActivityName="com.perlib.wmbg.activities.MainMenu">
 	            <meta-data
@@ -46,7 +46,7 @@
 	            android:value="com.perlib.wmbg.activities.MainMenu" />
         </activity>
         <activity 
-            android:name="MainMenu"
+            android:name=".activities.MainMenu"
             android:theme="@style/Theme.AppCompat">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity 
-            android:name="ScanBook"
+            android:name=".activities.ScanBook"
             android:theme="@style/Theme.AppCompat"
             android:parentActivityName="com.perlib.wmbg.activities.MainMenu">
 	            <meta-data

@@ -12,7 +12,6 @@ public class Book implements Parcelable {
 	@Expose private String lendedTo;
 	@Expose private String email;
 	@Expose private long dateLended;
-
 	
 	public Book(String name, String author, String lendedTo, String email, long dateLended)
 	{

@@ -16,7 +16,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -69,6 +68,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 			items = b.getParcelableArrayList("items");
 		}
 		adapter = BookAdapter.CreateBookAdapter(items, getApplicationContext());
+		//adapter = new BookAdapter(items, getApplicationContext());
 		swipeAdapter = new SwipeDismissAdapter(adapter ,new OnDismissCallback() {
 			
 			@Override
@@ -208,6 +208,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	
 	private void refreshList()
 	{
+		adapter.setItems(items);
 		adapter.notifyDataSetChanged();
 	}
 
