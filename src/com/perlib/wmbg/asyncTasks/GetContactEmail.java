@@ -1,4 +1,6 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.asyncTasks;
+
+import com.perlib.wmbg.interfaces.OnEmailLoadingListener;
 
 import android.content.ContentResolver;
 import android.database.Cursor;

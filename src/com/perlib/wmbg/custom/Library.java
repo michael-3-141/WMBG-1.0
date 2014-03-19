@@ -1,4 +1,4 @@
-package com.perlib.wmbg.book;
+package com.perlib.wmbg.custom;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -32,9 +32,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.perlib.wmbg.DownloadInfo;
-import com.perlib.wmbg.OnDownloadComplete;
 import com.perlib.wmbg.R;
+import com.perlib.wmbg.asyncTasks.DownloadInfo;
+import com.perlib.wmbg.book.Book;
+import com.perlib.wmbg.book.Settings;
+import com.perlib.wmbg.interfaces.OnDownloadComplete;
 
 public class Library {
 	

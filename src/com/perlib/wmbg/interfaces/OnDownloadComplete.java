@@ -1,4 +1,4 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.interfaces;
 
 public interface OnDownloadComplete {
 	void OnTaskFinished(String result);

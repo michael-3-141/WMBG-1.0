@@ -1,4 +1,4 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.activities;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,10 +31,14 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.google.gson.Gson;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
+import com.perlib.wmbg.R;
+import com.perlib.wmbg.asyncTasks.DownloadInfo;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.BookJsonAdapter;
-import com.perlib.wmbg.book.Library;
 import com.perlib.wmbg.book.Settings;
+import com.perlib.wmbg.custom.BookAdapter;
+import com.perlib.wmbg.custom.Library;
+import com.perlib.wmbg.interfaces.OnDownloadComplete;
 
 public class MainActivity extends ActionBarActivity implements OnDownloadComplete{
 

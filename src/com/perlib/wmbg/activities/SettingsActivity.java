@@ -1,4 +1,4 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +13,8 @@ import android.widget.Spinner;
 import android.widget.ToggleButton;
 
 import com.perlib.wmbg.R;
-import com.perlib.wmbg.book.Library;
 import com.perlib.wmbg.book.Settings;
+import com.perlib.wmbg.custom.Library;
 
 public class SettingsActivity extends ActionBarActivity {
 

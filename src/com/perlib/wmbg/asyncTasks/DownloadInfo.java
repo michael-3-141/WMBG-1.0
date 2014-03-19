@@ -1,4 +1,4 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.asyncTasks;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,6 +10,8 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.perlib.wmbg.interfaces.OnDownloadComplete;
 
 import android.os.AsyncTask;
 

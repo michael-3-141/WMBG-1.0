@@ -1,4 +1,4 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.interfaces;
 
 import java.util.HashMap;
 

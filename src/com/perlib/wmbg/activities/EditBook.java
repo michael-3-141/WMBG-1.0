@@ -1,4 +1,4 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.activities;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -7,8 +7,12 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import com.perlib.wmbg.R;
+import com.perlib.wmbg.asyncTasks.GetContactEmail;
+import com.perlib.wmbg.asyncTasks.GetContactNames;
 import com.perlib.wmbg.book.Book;
-import com.perlib.wmbg.book.Library;
+import com.perlib.wmbg.custom.Library;
+import com.perlib.wmbg.interfaces.OnContactLoadingComplete;
+import com.perlib.wmbg.interfaces.OnEmailLoadingListener;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;

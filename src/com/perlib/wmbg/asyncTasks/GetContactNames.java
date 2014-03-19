@@ -1,7 +1,9 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.asyncTasks;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.perlib.wmbg.interfaces.OnContactLoadingComplete;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;

@@ -1,4 +1,4 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.activities;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,9 +12,11 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.BookJsonAdapter;
-import com.perlib.wmbg.book.Library;
+import com.perlib.wmbg.custom.Library;
+import com.perlib.wmbg.interfaces.OnDownloadComplete;
 
 import android.app.Activity;
 import android.content.Intent;

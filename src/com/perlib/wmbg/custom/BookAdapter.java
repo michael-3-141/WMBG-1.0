@@ -1,4 +1,4 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.custom;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 
+import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Book;
 
 public class BookAdapter extends SimpleAdapter {

@@ -1,4 +1,4 @@
-package com.perlib.wmbg;
+package com.perlib.wmbg.activities;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,8 +17,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Book;
-import com.perlib.wmbg.book.Library;
+import com.perlib.wmbg.custom.Library;
 
 public class ScanBook extends ActionBarActivity {
 
