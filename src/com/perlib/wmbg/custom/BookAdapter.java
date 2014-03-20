@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -34,45 +36,46 @@ public class BookAdapter extends ArrayAdapter<Book> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-	  View v = super.getView(position, convertView, parent);
+		LayoutInflater inflater = (LayoutInflater) cx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View v = inflater.inflate(R.layout.simple_list_item_3, parent, false);
 
-	  int colorPos = position % colors.length;
-	  v.setBackgroundColor(colors[colorPos]);
-	  
-	  Book item = items.get(position);
-	  
-	  TextView text1 = (TextView) v.findViewById(R.id.text1);
-	  TextView text2 = (TextView) v.findViewById(R.id.text2);
-	  TextView text3 = (TextView) v.findViewById(R.id.text3);
-	  TextView text4 = (TextView) v.findViewById(R.id.text4);
-	  
-	  String displayAuthor = cx.getString(R.string.by) + item.getAuthor();
-	  String displayLendedTo = cx.getString(R.string.lendedToDisplay);
-	  String displayDateLended = "";
-	  
-	  if(item.isLended())
-	  {
-		  displayLendedTo += item.getLendedTo();
-	  }
-	  else
-	  {
-		  displayLendedTo += cx.getString(R.string.none);
-	  }
+		int colorPos = position % colors.length;
+		v.setBackgroundColor(colors[colorPos]);
 
-	  if(item.isLended())
-	  {
-		  GregorianCalendar gcDateLended = new GregorianCalendar();
-		  gcDateLended.setTimeInMillis(item.getDateLended()*1000);
-		  SimpleDateFormat format = new SimpleDateFormat("d/M/y", Locale.US);
-		  displayDateLended = cx.getString(R.string.dateLendedDisplay) + format.format(gcDateLended.getTime());
-	  }
+		Book item = items.get(position);
 
-	  text1.setText(item.getName());
-	  text2.setText(displayAuthor);
-	  text3.setText(displayLendedTo);
-	  text4.setText(displayDateLended);
+		TextView text1 = (TextView) v.findViewById(R.id.text1);
+		TextView text2 = (TextView) v.findViewById(R.id.text2);
+		TextView text3 = (TextView) v.findViewById(R.id.text3);
+		TextView text4 = (TextView) v.findViewById(R.id.text4);
 
-	  return v;
+		String displayAuthor = cx.getString(R.string.by) + item.getAuthor();
+		String displayLendedTo = cx.getString(R.string.lendedToDisplay);
+		String displayDateLended = "";
+
+		if(item.isLended())
+		{
+			displayLendedTo += item.getLendedTo();
+		}
+		else
+		{
+			displayLendedTo += cx.getString(R.string.none);
+		}
+
+		if(item.isLended())
+		{
+			GregorianCalendar gcDateLended = new GregorianCalendar();
+			gcDateLended.setTimeInMillis(item.getDateLended()*1000);
+			SimpleDateFormat format = new SimpleDateFormat("d/M/y", Locale.US);
+			displayDateLended = cx.getString(R.string.dateLendedDisplay) + format.format(gcDateLended.getTime());
+		}
+
+		text1.setText(item.getName());
+		text2.setText(displayAuthor);
+		text3.setText(displayLendedTo);
+		text4.setText(displayDateLended);
+
+		return v;
 	}
 
 	public List<Book> getItems() {
