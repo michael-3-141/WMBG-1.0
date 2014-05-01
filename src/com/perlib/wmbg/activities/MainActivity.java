@@ -3,8 +3,6 @@ package com.perlib.wmbg.activities;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -40,7 +38,7 @@ import com.perlib.wmbg.interfaces.OnDownloadComplete;
 
 public class MainActivity extends ActionBarActivity implements OnDownloadComplete{
 
-	List<Book> items = new ArrayList<Book>(); 
+	public List<Book> items = new ArrayList<Book>(); 
 	Settings settings;
 	DownloadInfo downloader;
 	OnDownloadComplete downloadListener = this;
@@ -48,12 +46,11 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	BookAdapter adapter;
 	SwipeDismissAdapter swipeAdapter;
 	EditText etSearch;
-	List<Map<String,String>> displayList = new ArrayList<Map<String,String>>();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		//test
+		
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
@@ -67,7 +64,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 			Bundle b = getIntent().getExtras();
 			items = b.getParcelableArrayList("items");
 		}
-		adapter = new BookAdapter(items, getApplicationContext());
+		adapter = new BookAdapter(this);
 		swipeAdapter = new SwipeDismissAdapter(adapter ,new OnDismissCallback() {
 			
 			@Override
@@ -207,7 +204,6 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	
 	private void refreshList()
 	{
-		adapter.setItems(items);
 		adapter.notifyDataSetChanged();
 	}
 
@@ -222,7 +218,6 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 				public void onClick(DialogInterface dialog, int which) {
 					
 					items.remove(position);
-					displayList.remove(position);
 					swipeAdapter.notifyDataSetChanged();
 					Library.saveInfo(items);
 				}
@@ -242,7 +237,6 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		else
 		{
 			items.remove(position);
-			displayList.remove(position);
 			swipeAdapter.notifyDataSetChanged();
 			Library.saveInfo(items);
 		}

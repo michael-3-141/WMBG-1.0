@@ -12,7 +12,17 @@ public class Book implements Parcelable {
 	@Expose private String lendedTo;
 	@Expose private String email;
 	@Expose private long dateLended;
+	@Expose private String thumbnailUrl;
 	
+	public Book(String name, String author, String lendedTo, String email, long dateLended, String thumbnailUrl) {
+		this.name = name;
+		this.author = author;
+		this.lendedTo = lendedTo;
+		this.email = email;
+		this.dateLended = dateLended;
+		this.thumbnailUrl = thumbnailUrl;
+	}
+
 	public Book(String name, String author, String lendedTo, String email, long dateLended)
 	{
 		this.name = name;
@@ -111,5 +121,13 @@ public class Book implements Parcelable {
 	public boolean isLended()
 	{
 		return this.lendedTo.length() > 0;
+	}
+
+	public String getThumbnailUrl() {
+		return thumbnailUrl;
+	}
+
+	public void setThumbnailUrl(String thumbnailUrl) {
+		this.thumbnailUrl = thumbnailUrl;
 	}
 }

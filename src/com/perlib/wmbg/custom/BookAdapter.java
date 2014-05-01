@@ -3,35 +3,34 @@ package com.perlib.wmbg.custom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.perlib.wmbg.R;
+import com.perlib.wmbg.activities.MainActivity;
 import com.perlib.wmbg.book.Book;
 
-public class BookAdapter extends ArrayAdapter<Book> {
+public class BookAdapter extends BaseAdapter implements Filterable {
 	
-	List<Book> items = new ArrayList<Book>();
+	private MainActivity activity;
 	private int[] colors = new int[] { 0x30ffffff, 0x30808080 };
-	Context cx;
-
-	public BookAdapter(Context context, int resource, List<Book> objects) {
-		super(context, resource, objects);
-		items = objects;
-		this.cx = context;
-	}
+	private Context cx;
+	boolean filtered;
+	private ArrayList<Book> FilteredList = new ArrayList<Book>();
+	private BookFilter filter = new BookFilter(); 
 	
-	public BookAdapter(List<Book> items, Context cx) {
-		super(cx, R.layout.simple_list_item_3, items);
-		this.items = items;
-		this.cx = cx;
+	public BookAdapter(MainActivity activity) {
+		this.activity = activity;
+		cx = activity.getApplicationContext();
 	}
 
 	@Override
@@ -42,7 +41,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
 		int colorPos = position % colors.length;
 		v.setBackgroundColor(colors[colorPos]);
 
-		Book item = items.get(position);
+		Book item = getItem(position);
 
 		TextView text1 = (TextView) v.findViewById(R.id.text1);
 		TextView text2 = (TextView) v.findViewById(R.id.text2);
@@ -78,12 +77,67 @@ public class BookAdapter extends ArrayAdapter<Book> {
 		return v;
 	}
 
-	public List<Book> getItems() {
-		return items;
+	@Override
+	public int getCount() {
+		return !filtered ? activity.items.size() : FilteredList.size();
 	}
 
-	public void setItems(List<Book> items) {
-		this.items = items;
+	@Override
+	public Book getItem(int position) {
+		return !filtered ? activity.items.get(position) : FilteredList.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return 0;
+	}
+
+	public class BookFilter extends Filter{
+		
+        @SuppressLint("DefaultLocale")
+		@Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            ArrayList<Book> FilteredList = new ArrayList<Book>();
+            String filterString = constraint.toString().toLowerCase();
+            Book item;
+        	
+            FilterResults Result = new FilterResults();
+            if(constraint.length() == 0 ){
+            	return null;
+            }
+
+            for(int i = 0; i<activity.items.size(); i++){
+                item = activity.items.get(i);
+                if(item.getName().toLowerCase().contains(filterString)){
+                    FilteredList.add(activity.items.get(i));
+                }
+            }
+            Result.values = FilteredList;
+            Result.count = FilteredList.size();
+
+            return Result;
+        }
+
+        @SuppressWarnings("unchecked")
+		@Override
+        protected void publishResults(CharSequence constraint,FilterResults results) {
+        	if(results != null)
+        	{
+        		filtered = true;
+	        	FilteredList = (ArrayList<Book>) results.values;
+	            notifyDataSetChanged();
+        	}
+        	else
+        	{
+        		filtered = false;
+        		notifyDataSetChanged();
+        	}
+        }
+	};
+	
+	public Filter getFilter() {
+		return filter;
 	}
 	
 	
