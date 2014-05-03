@@ -33,18 +33,32 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.perlib.wmbg.R;
-import com.perlib.wmbg.asyncTasks.DownloadInfo;
+import com.perlib.wmbg.asyncTasks.DownloadBookInfo;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.Settings;
 import com.perlib.wmbg.interfaces.OnDownloadComplete;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Library.
+ */
 public class Library {
 	
 	
+	/** The mode get names. */
 	public static int MODE_GET_NAMES = 0;
+	
+	/** The mode get emails. */
 	public static int MODE_GET_EMAILS = 1;
+	
+	/** The mode get all. */
 	public static int MODE_GET_ALL = 2;
 	
+	/**
+	 * Save info.
+	 *
+	 * @param list the list
+	 */
 	public static void saveInfo(List<Book> list)
 	{
 		String eol = System.getProperty("line.separator");
@@ -71,6 +85,11 @@ public class Library {
 		}
 	}
 	
+	/**
+	 * Save settings.
+	 *
+	 * @param settings the settings
+	 */
 	public static void saveSettings(Settings settings)
 	{
 		String eol = System.getProperty("line.separator");
@@ -95,6 +114,12 @@ public class Library {
 		}
 	}
 	
+	/**
+	 * Read contact data.
+	 *
+	 * @param cr the cr
+	 * @return the object[]
+	 */
 	@SuppressLint("UseSparseArrays")
 	public static Object[] readContactData(ContentResolver cr) {
         Object[] results = new Object[3];
@@ -166,6 +191,12 @@ public class Library {
         return results;
    }
 	
+	/**
+	 * Load settings.
+	 *
+	 * @param cx the cx
+	 * @return the settings
+	 */
 	public static Settings loadSettings(Context cx)
 	{
 		//String eol = System.getProperty("line.separator");
@@ -196,6 +227,12 @@ public class Library {
 		return settings;
 	}
 	
+	/**
+	 * Checks if is connected to internet.
+	 *
+	 * @param cx the cx
+	 * @return true, if is connected to internet
+	 */
 	public static boolean isConnectedToInternet(Context cx){
 	    ConnectivityManager connectivity = (ConnectivityManager)cx.getSystemService(Context.CONNECTIVITY_SERVICE);
 	      if (connectivity != null) 
@@ -212,12 +249,19 @@ public class Library {
 	      return false;
 	}
 	
+	/**
+	 * Handle isbn.
+	 *
+	 * @param isbn the isbn
+	 * @param cx the cx
+	 * @param listener the listener
+	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public static void handleISBN(String isbn, Context cx, OnDownloadComplete listener)
 	{
 		if(isbn.length() == 0){Toast.makeText(cx, cx.getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();return;}
 		if(!Library.isConnectedToInternet(cx)){Toast.makeText(cx, cx.getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
-		DownloadInfo downloader = new DownloadInfo(listener);
+		DownloadBookInfo downloader = new DownloadBookInfo(listener);
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 		{
 			downloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isbn);
@@ -228,6 +272,15 @@ public class Library {
 		}
 	}
 	
+	/**
+	 * Delete item.
+	 *
+	 * @param position the position
+	 * @param settings the settings
+	 * @param cx the cx
+	 * @param listener the listener
+	 * @param items the items
+	 */
 	public static void deleteItem(final int position, Settings settings, Context cx, DialogInterface.OnClickListener listener, List<Book> items)
 	{
 		if(settings.isConfirmDelete())
@@ -252,6 +305,13 @@ public class Library {
 		}
 	}
 	
+	/**
+	 * Return item.
+	 *
+	 * @param position the position
+	 * @param items the items
+	 * @return the list
+	 */
 	public static List<Book> returnItem(final int position, List<Book> items)
 	{
 		Book item = items.get(position);
@@ -263,6 +323,15 @@ public class Library {
 		return items;
 	}
 	
+	/**
+	 * Return or delete item.
+	 *
+	 * @param position the position
+	 * @param cx the cx
+	 * @param items the items
+	 * @param listener the listener
+	 * @param settings the settings
+	 */
 	public static void returnOrDeleteItem(final int position, final Context cx, final List<Book> items, final OnClickListener listener, final Settings settings)
 	{
 		AlertDialog.Builder delete_or_return_builder = new AlertDialog.Builder(cx);
@@ -287,6 +356,11 @@ public class Library {
 		dialog.show();
 	}
 	
+	/**
+	 * Load data.
+	 *
+	 * @return the list
+	 */
 	public static List<Book> loadData()
 	{
 		String fs = System.getProperty("file.separator");

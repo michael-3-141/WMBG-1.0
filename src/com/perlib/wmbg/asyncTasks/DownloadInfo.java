@@ -15,16 +15,33 @@ import com.perlib.wmbg.interfaces.OnDownloadComplete;
 
 import android.os.AsyncTask;
 
+/**
+ * Async task to download a book from isbnDB.
+ */
+
+@Deprecated
 public class DownloadInfo extends AsyncTask<String, String, String> {
 
+	/** The api key. */
 	private final String API_KEY = "33BNPPTM";
+	
+	/** The listener. */
+	@SuppressWarnings("unused")
 	private OnDownloadComplete listener;
 	
+	/**
+	 * Instantiates a new download info.
+	 *
+	 * @param listener the listener
+	 */
 	public DownloadInfo(OnDownloadComplete listener) {
 		super();
 		this.listener = listener;
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+	 */
 	@Override
 	protected String doInBackground(String... isbn) {
 		
@@ -52,10 +69,13 @@ public class DownloadInfo extends AsyncTask<String, String, String> {
         return responseString;
 	}
 	
+	/**
+	 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+	 */
 	@Override
 	protected void onPostExecute(String result)
 	{
-		listener.OnTaskFinished(result);
+		//listener.OnTaskFinished(result);
 	}
 
 }

@@ -1,10 +1,25 @@
 package com.perlib.wmbg.book;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class BookJsonAdapter.
+ */
 public class BookJsonAdapter {
+	
+	/** The data. */
 	JsonBook[] data = new JsonBook[]{};
+	
+	/** The index searched. */
 	String indexSearched;
+	
+	/** The error. */
 	String error;
 	
+	/**
+	 * Convert to book.
+	 *
+	 * @return the book
+	 */
 	public Book convertToBook()
 	{
 		Book convertedBook = new Book();

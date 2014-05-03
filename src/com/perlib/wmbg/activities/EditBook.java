@@ -36,24 +36,62 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class EditBook.
+ */
 public class EditBook extends ActionBarActivity implements OnContactLoadingComplete, OnEmailLoadingListener {
 
+	/** The items. */
 	List<Book> items = new ArrayList<Book>();
+	
+	/** The edit pos. */
 	int editPos;
+	
+	/** The edited item. */
 	Book editedItem;
+	
+	/** The auto names. */
 	List<String> autoNames = new ArrayList<String>();
+	
+	/** The et lended to. */
 	AutoCompleteTextView etLendedTo;
+	
+	/** The dp date lended. */
 	DatePicker dpDateLended;
+	
+	/** The adapter. */
 	private ArrayAdapter<String> adapter;
+	
+	/** The contact name loader. */
 	GetContactNames contactNameLoader;
+	
+	/** The contact email loader. */
 	GetContactEmail contactEmailLoader;
+	
+	/** The contact email listener. */
 	OnEmailLoadingListener contactEmailListener = this;
+	
+	/** The et email. */
 	EditText etEmail;
+	
+	/** The btn return book. */
 	Button btnReturnBook;
+	
+	/** The btn send reminder. */
 	Button btnSendReminder;
+	
+	/** The btn delete. */
 	Button btnDelete;
+	
+	/** The name id map. */
 	private HashMap<Integer, String> nameIdMap;
-	/** Called when the activity is first created. */
+	
+	/**
+	 *  Called when the activity is first created.
+	 *
+	 * @param savedInstanceState the saved instance state
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -204,6 +242,9 @@ public class EditBook extends ActionBarActivity implements OnContactLoadingCompl
 	    
 	}
 	
+	/**
+	 * Start contact search.
+	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void startContactSearch()
 	{
@@ -217,6 +258,11 @@ public class EditBook extends ActionBarActivity implements OnContactLoadingCompl
 		}
 	}
 	
+	/**
+	 * Execute email loader.
+	 *
+	 * @param id the id
+	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void executeEmailLoader(int id)
 	{
@@ -231,6 +277,9 @@ public class EditBook extends ActionBarActivity implements OnContactLoadingCompl
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see com.perlib.wmbg.interfaces.OnContactLoadingComplete#OnNameLoadingFinished(java.util.HashMap)
+	 */
 	@Override
 	public void OnNameLoadingFinished(HashMap<Integer, String> result) {
 		Log.i("autocompletecontacts", "Finished loading contacts");
@@ -245,6 +294,9 @@ public class EditBook extends ActionBarActivity implements OnContactLoadingCompl
 	    adapter.notifyDataSetChanged();
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onDestroy()
+	 */
 	@Override
 	public void onDestroy()
 	{
@@ -256,6 +308,9 @@ public class EditBook extends ActionBarActivity implements OnContactLoadingCompl
 		super.onDestroy();
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.perlib.wmbg.interfaces.OnEmailLoadingListener#OnEmailLoadingCompleted(java.lang.String)
+	 */
 	@Override
 	public void OnEmailLoadingCompleted(String email) {
 		

@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,48 +27,97 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.perlib.wmbg.R;
-import com.google.gson.Gson;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.perlib.wmbg.asyncTasks.DownloadInfo;
+import com.perlib.wmbg.asyncTasks.DownloadBookInfo;
 import com.perlib.wmbg.asyncTasks.GetContactEmail;
 import com.perlib.wmbg.asyncTasks.GetContactNames;
 import com.perlib.wmbg.book.Book;
-import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.custom.Library;
 import com.perlib.wmbg.interfaces.OnContactLoadingComplete;
 import com.perlib.wmbg.interfaces.OnDownloadComplete;
 import com.perlib.wmbg.interfaces.OnEmailLoadingListener;
+import com.squareup.picasso.Picasso;
 
+/**
+ * The Class AddBook.
+ */
 public class AddBook extends ActionBarActivity implements OnDownloadComplete, OnContactLoadingComplete, OnEmailLoadingListener {
 
+	/** The items. */
 	List<Book> items = new ArrayList<Book>();
+	
+	/** The download listener. */
 	OnDownloadComplete downloadListener = this;
+	
+	/** The contacts listener. */
 	OnContactLoadingComplete contactsListener = this;
+	
+	/** The contact email listener. */
 	OnEmailLoadingListener contactEmailListener = this;
+    
+    /** The name value arr. */
     public ArrayList<String> nameValueArr = new ArrayList<String>();
+    
+    /** The downloader. */
     @SuppressLint("UseSparseArrays")
-	DownloadInfo downloader;
+	DownloadBookInfo downloader;
+	
+	/** The contact name loader. */
 	GetContactNames contactNameLoader;
+	
+	/** The contact email loader. */
 	GetContactEmail contactEmailLoader;
+    
+    /** The etbookname. */
     EditText etbookname;
+    
+    /** The et book author. */
     EditText etBookAuthor;
+    
+    /** The et lended to. */
     AutoCompleteTextView etLendedTo;
+    
+    EditText etImageUrl;
+    
+    ImageView ivImage;
+    
+    /** The btn add book. */
     Button btnAddBook;
+    
+    /** The et isbn. */
     EditText etISBN;
+    
+    /** The btn download info. */
     Button btnDownloadInfo;
+    
+    /** The et email. */
     EditText etEmail;
+	
+	/** The adapter. */
 	ArrayAdapter<String> adapter;
+	
+	/** The name id map. */
 	Map<Integer, String> nameIdMap;
+	
+	/** The mode. */
 	int mode;
 	
+	/** The Constant MODE_AUTO. */
 	public static final int MODE_AUTO = 0;
+	
+	/** The Constant MODE_MANUAL. */
 	public static final int MODE_MANUAL = 1;
 	
-	/** Called when the activity is first created. */
+	/**
+	 *  Called when the activity is first created.
+	 *
+	 * @param savedInstanceState the saved instance state
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -82,6 +133,8 @@ public class AddBook extends ActionBarActivity implements OnDownloadComplete, On
 	    etISBN = (EditText)findViewById(R.id.etISBN);
 	    btnDownloadInfo = (Button)findViewById(R.id.btnDownloadInfo);
 	    etEmail = (EditText)findViewById(R.id.etEmail);
+	    etImageUrl = (EditText) findViewById(R.id.etImageUrl);
+	    ivImage = (ImageView) findViewById(R.id.image);
 	    
 	    Bundle b = getIntent().getExtras();
 	    items = b.getParcelableArrayList("items");
@@ -113,7 +166,7 @@ public class AddBook extends ActionBarActivity implements OnDownloadComplete, On
 				{
 					GregorianCalendar dateLendedGc = new GregorianCalendar();
 					long dateLended = dateLendedGc.getTimeInMillis()/1000;
-					items.add(new Book(bookname, bookAuthor ,lendedTo, email, dateLended));
+					items.add(new Book(bookname, bookAuthor ,lendedTo, email, dateLended, etImageUrl.getText().toString()));
 					
 					Library.saveInfo(items);
 					
@@ -168,11 +221,34 @@ public class AddBook extends ActionBarActivity implements OnDownloadComplete, On
 				}
 			}
 		});
+	    
+	    etImageUrl.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+				Picasso.with(getApplicationContext()).load(s.toString()).into(ivImage);
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+			}
+		});
 	   
 	    
 	}
 
 	
+	/**
+	 * Start contact search.
+	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void startContactSearch()
 	{
@@ -186,6 +262,11 @@ public class AddBook extends ActionBarActivity implements OnDownloadComplete, On
 		}
 	}
 	
+	/**
+	 * Execute email loader.
+	 *
+	 * @param id the id
+	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void executeEmailLoader(int id)
 	{
@@ -199,29 +280,27 @@ public class AddBook extends ActionBarActivity implements OnDownloadComplete, On
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.perlib.wmbg.interfaces.OnDownloadComplete#OnTaskFinished(java.lang.String)
+	 */
 	@Override
-	public void OnTaskFinished(String result) {
+	public void OnTaskFinished(Book result) {
 		
-		//Toast.makeText(getApplicationContext(), downloader.getJsonResult(), Toast.LENGTH_SHORT).show();
-		Gson gson = new Gson();
-		BookJsonAdapter adapter = gson.fromJson(result , BookJsonAdapter.class);
-		if(adapter == null)
+		if(result == null)
 		{
 			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();
 			return;
 		}
-		Book resultBook = adapter.convertToBook();
-		if(resultBook == null)
-		{
-			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();
-			return;
-		}
-		etbookname.setText(resultBook.getName());
-		etBookAuthor.setText(resultBook.getAuthor());
+		etbookname.setText(result.getName());
+		etBookAuthor.setText(result.getAuthor());
+		etImageUrl.setText(result.getThumbnailUrl());
 		
 	}
 	
 	 
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onActivityResult(int, int, android.content.Intent)
+	 */
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		
 		IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
@@ -239,12 +318,17 @@ public class AddBook extends ActionBarActivity implements OnDownloadComplete, On
 		}
 	}
 	
+	/**
+	 * Handle isbn.
+	 *
+	 * @param isbn the isbn
+	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void handleISBN(String isbn)
 	{
 		if(isbn.length() == 0){Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();return;}
 		if(!Library.isConnectedToInternet(getApplicationContext())){Toast.makeText(getApplicationContext(), getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
-		downloader = new DownloadInfo(downloadListener);
+		downloader = new DownloadBookInfo(downloadListener);
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 		{
 			downloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isbn);
@@ -256,6 +340,9 @@ public class AddBook extends ActionBarActivity implements OnDownloadComplete, On
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.perlib.wmbg.interfaces.OnContactLoadingComplete#OnNameLoadingFinished(java.util.HashMap)
+	 */
 	@Override
 	public void OnNameLoadingFinished(HashMap<Integer, String> result) {
 		Log.i("autocompletecontacts", "Finished loading contacts");
@@ -271,6 +358,9 @@ public class AddBook extends ActionBarActivity implements OnDownloadComplete, On
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onDestroy()
+	 */
 	@Override
 	public void onDestroy()
 	{
@@ -287,6 +377,9 @@ public class AddBook extends ActionBarActivity implements OnDownloadComplete, On
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.perlib.wmbg.interfaces.OnEmailLoadingListener#OnEmailLoadingCompleted(java.lang.String)
+	 */
 	@Override
 	public void OnEmailLoadingCompleted(String email) {
 		

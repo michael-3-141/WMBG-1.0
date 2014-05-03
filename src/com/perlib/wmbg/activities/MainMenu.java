@@ -14,7 +14,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Book;
-import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.custom.Library;
 import com.perlib.wmbg.interfaces.OnDownloadComplete;
 
@@ -28,17 +27,31 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+/**
+ * The main menu activity.
+ */
 public class MainMenu extends Activity implements OnDownloadComplete {
 
+	/** The btn search book. */
 	Button btnSearchBook;
+	
+	/** The btn scan book. */
 	Button btnScanBook;
+	
+	/** The btn manual add book. */
 	Button btnManualAddBook;
 	
+	/** The scan integrator. */
 	IntentIntegrator scanIntegrator = new IntentIntegrator(this);
 	
+	/** The items. */
 	List<Book> items = new ArrayList<Book>();
 	
-	/** Called when the activity is first created. */
+	/**
+	 *  Called when the activity is first created.
+	 *
+	 * @param savedInstanceState the saved instance state
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -86,6 +99,9 @@ public class MainMenu extends Activity implements OnDownloadComplete {
 		});
 	}
 	
+	/**
+	 * Load data.
+	 */
 	private void loadData()
 	{
 		String fs = System.getProperty("file.separator");
@@ -116,6 +132,9 @@ public class MainMenu extends Activity implements OnDownloadComplete {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent intent)
 	{
@@ -129,18 +148,13 @@ public class MainMenu extends Activity implements OnDownloadComplete {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.perlib.wmbg.interfaces.OnDownloadComplete#OnTaskFinished(java.lang.String)
+	 */
 	@Override
-	public void OnTaskFinished(String result) {
+	public void OnTaskFinished(Book result) {
 		
-		Gson gson = new Gson();
-		BookJsonAdapter adapter = gson.fromJson(result , BookJsonAdapter.class);
-		if(adapter == null)
-		{
-			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();
-			return;
-		}
-		Book resultBook = adapter.convertToBook();
-		if(resultBook == null)
+		if(result == null)
 		{
 			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();
 			return;
@@ -148,7 +162,7 @@ public class MainMenu extends Activity implements OnDownloadComplete {
 		
 		Intent scanBook = new Intent(getApplicationContext(), ScanBook.class);
 		scanBook.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
-		scanBook.putExtra("result", (Parcelable) resultBook);
+		scanBook.putExtra("result", (Parcelable) result);
 		startActivity(scanBook);
 	}
 

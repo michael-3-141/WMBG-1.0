@@ -12,17 +12,33 @@ import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class GetContactNames.
+ */
 public class GetContactNames extends AsyncTask<Void, String, HashMap<Integer, String>> {
 
+	/** The listener. */
 	private OnContactLoadingComplete listener;
+	
+	/** The cr. */
 	ContentResolver cr;
 	
+	/**
+	 * Instantiates a new gets the contact names.
+	 *
+	 * @param listener the listener
+	 * @param cr the cr
+	 */
 	public GetContactNames(OnContactLoadingComplete listener, ContentResolver cr) {
 		super();
 		this.listener = listener;
 		this.cr = cr;
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
+	 */
 	@SuppressLint("UseSparseArrays")
 	@Override
 	protected HashMap<Integer, String> doInBackground(Void...nothing) {
@@ -57,6 +73,9 @@ public class GetContactNames extends AsyncTask<Void, String, HashMap<Integer, St
 	    return (HashMap<Integer, String>) names;
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+	 */
 	@Override
 	protected void onPostExecute(HashMap<Integer, String> result)
 	{

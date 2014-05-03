@@ -16,14 +16,32 @@ import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Settings;
 import com.perlib.wmbg.custom.Library;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The activity that handles the settings.
+ */
 public class SettingsActivity extends ActionBarActivity {
 
+	/** The custom message. */
 	EditText customMessage;
+	
+	/** The btn save. */
 	Button btnSave;
+	
+	/** The settings. */
 	Settings settings;
+	
+	/** The tb delete confirm. */
 	ToggleButton tbDeleteConfirm;
+	
+	/** The sp swipe mode. */
 	Spinner spSwipeMode;
-	/** Called when the activity is first created. */
+	
+	/**
+	 *  Called when the activity is first created.
+	 *
+	 * @param savedInstanceState the saved instance state
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);

@@ -3,6 +3,7 @@ package com.perlib.wmbg.activities;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -24,28 +25,48 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.gson.Gson;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.perlib.wmbg.R;
-import com.perlib.wmbg.asyncTasks.DownloadInfo;
+import com.perlib.wmbg.asyncTasks.DownloadBookInfo;
 import com.perlib.wmbg.book.Book;
-import com.perlib.wmbg.book.BookJsonAdapter;
 import com.perlib.wmbg.book.Settings;
 import com.perlib.wmbg.custom.BookAdapter;
 import com.perlib.wmbg.custom.Library;
 import com.perlib.wmbg.interfaces.OnDownloadComplete;
 
+/**
+ * The list activity. This activity has a list of all the books the user has.
+ */
 public class MainActivity extends ActionBarActivity implements OnDownloadComplete{
 
+	/** The items. */
 	public List<Book> items = new ArrayList<Book>(); 
+	
+	/** The settings. */
 	Settings settings;
-	DownloadInfo downloader;
+	
+	/** The downloader. */
+	DownloadBookInfo downloader;
+	
+	/** The download listener. */
 	OnDownloadComplete downloadListener = this;
+	
+	/** The book list. */
 	ListView bookList;
+	
+	/** The adapter. */
 	BookAdapter adapter;
+	
+	/** The swipe adapter. */
 	SwipeDismissAdapter swipeAdapter;
+	
+	/** The et search. */
 	EditText etSearch;
+	
+	/* (non-Javadoc)
+	 * @see android.support.v7.app.ActionBarActivity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -192,6 +213,11 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	}
 	
 
+	/**
+	 * Goto_editbook.
+	 *
+	 * @param position the position
+	 */
 	private void goto_editbook(int position) {
 		
 		Intent addbook = new Intent(getApplicationContext(), EditBook.class);
@@ -202,11 +228,19 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		startActivity(addbook);
 	}
 	
+	/**
+	 * Refresh list.
+	 */
 	private void refreshList()
 	{
 		adapter.notifyDataSetChanged();
 	}
 
+	/**
+	 * Delete item.
+	 *
+	 * @param position the position
+	 */
 	private void deleteItem(final int position)
 	{
 		if(settings.isConfirmDelete())
@@ -242,6 +276,11 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		}
 	}
 	
+	/**
+	 * Return item.
+	 *
+	 * @param position the position
+	 */
 	private void returnItem(final int position)
 	{
 		Book item = items.get(position);
@@ -253,6 +292,11 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		refreshList();
 	}
 	
+	/**
+	 * Return or delete item.
+	 *
+	 * @param position the position
+	 */
 	private void returnOrDeleteItem(final int position)
 	{
 		AlertDialog.Builder delete_or_return_builder = new AlertDialog.Builder(MainActivity.this);
@@ -277,18 +321,13 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		dialog.show();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.perlib.wmbg.interfaces.OnDownloadComplete#OnTaskFinished(java.lang.String)
+	 */
 	@Override
-	public void OnTaskFinished(String result) {
+	public void OnTaskFinished(Book result) {
 		
-		Gson gson = new Gson();
-		BookJsonAdapter adapter = gson.fromJson(result , BookJsonAdapter.class);
-		if(adapter == null)
-		{
-			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();
-			return;
-		}
-		Book resultBook = adapter.convertToBook();
-		if(resultBook == null)
+		if(result == null)
 		{
 			Toast.makeText(getApplicationContext(), getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();
 			return;
@@ -300,7 +339,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		for(Iterator<Book> i = items.iterator(); i.hasNext(); )
 		{
 			Book item = i.next();
-			if(item.getName().equals(resultBook.getName()))
+			if(item.getName().equals(result.getName()))
 			{
 				matcheIds.add(it);
 				matches.add(item);
@@ -335,6 +374,9 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onResume()
+	 */
 	@Override
 	public void onResume()
 	{
@@ -343,6 +385,9 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		refreshList();
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.support.v4.app.FragmentActivity#onStart()
+	 */
 	@Override
 	public void onStart()
 	{
@@ -350,6 +395,9 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		EasyTracker.getInstance(this).activityStart(this);
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.support.v7.app.ActionBarActivity#onStop()
+	 */
 	@Override
 	public void onStop()
 	{
