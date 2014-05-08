@@ -1,4 +1,4 @@
-package com.perlib.wmbg.asyncTasks;
+package com.perlib.wmbg.asynctasks;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import android.os.AsyncTask;
  */
 
 @Deprecated
-public class DownloadInfo extends AsyncTask<String, String, String> {
+public class DownloadInfoTask extends AsyncTask<String, String, String> {
 
 	/** The api key. */
 	private final String API_KEY = "33BNPPTM";
@@ -34,7 +34,7 @@ public class DownloadInfo extends AsyncTask<String, String, String> {
 	 *
 	 * @param listener the listener
 	 */
-	public DownloadInfo(OnDownloadComplete listener) {
+	public DownloadInfoTask(OnDownloadComplete listener) {
 		super();
 		this.listener = listener;
 	}

@@ -28,40 +28,40 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.nhaarman.listviewanimations.itemmanipulation.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 import com.perlib.wmbg.R;
-import com.perlib.wmbg.asyncTasks.DownloadBookInfo;
+import com.perlib.wmbg.asynctasks.DownloadBookInfoTask;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.Settings;
-import com.perlib.wmbg.custom.BookAdapter;
-import com.perlib.wmbg.custom.Library;
 import com.perlib.wmbg.interfaces.OnDownloadComplete;
+import com.perlib.wmbg.misc.BookAdapter;
+import com.perlib.wmbg.misc.Library;
 
 /**
  * The list activity. This activity has a list of all the books the user has.
  */
 public class MainActivity extends ActionBarActivity implements OnDownloadComplete{
 
-	/** The items. */
+	
 	public List<Book> items = new ArrayList<Book>(); 
 	
-	/** The settings. */
+	
 	Settings settings;
 	
-	/** The downloader. */
-	DownloadBookInfo downloader;
 	
-	/** The download listener. */
+	DownloadBookInfoTask downloader;
+	
+	
 	OnDownloadComplete downloadListener = this;
 	
-	/** The book list. */
+	
 	ListView bookList;
 	
-	/** The adapter. */
+	
 	BookAdapter adapter;
 	
-	/** The swipe adapter. */
+	
 	SwipeDismissAdapter swipeAdapter;
 	
-	/** The et search. */
+	
 	EditText etSearch;
 	
 	/* (non-Javadoc)
@@ -213,11 +213,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	}
 	
 
-	/**
-	 * Goto_editbook.
-	 *
-	 * @param position the position
-	 */
+	
 	private void goto_editbook(int position) {
 		
 		Intent addbook = new Intent(getApplicationContext(), EditBook.class);
@@ -228,19 +224,13 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		startActivity(addbook);
 	}
 	
-	/**
-	 * Refresh list.
-	 */
+	
 	private void refreshList()
 	{
 		adapter.notifyDataSetChanged();
 	}
 
-	/**
-	 * Delete item.
-	 *
-	 * @param position the position
-	 */
+	
 	private void deleteItem(final int position)
 	{
 		if(settings.isConfirmDelete())
@@ -276,11 +266,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		}
 	}
 	
-	/**
-	 * Return item.
-	 *
-	 * @param position the position
-	 */
+	
 	private void returnItem(final int position)
 	{
 		Book item = items.get(position);
@@ -292,11 +278,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 		refreshList();
 	}
 	
-	/**
-	 * Return or delete item.
-	 *
-	 * @param position the position
-	 */
+	
 	private void returnOrDeleteItem(final int position)
 	{
 		AlertDialog.Builder delete_or_return_builder = new AlertDialog.Builder(MainActivity.this);
@@ -392,7 +374,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	public void onStart()
 	{
 		super.onStart();
-		EasyTracker.getInstance(this).activityStart(this);
+		//EasyTracker.getInstance(this).activityStart(this);
 	}
 	
 	/* (non-Javadoc)
@@ -402,7 +384,7 @@ public class MainActivity extends ActionBarActivity implements OnDownloadComplet
 	public void onStop()
 	{
 		super.onStop();
-		EasyTracker.getInstance(this).activityStop(this);
+		//EasyTracker.getInstance(this).activityStop(this);
 		Library.saveInfo(items);
 	}
 	

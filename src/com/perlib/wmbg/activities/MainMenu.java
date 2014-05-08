@@ -14,8 +14,8 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Book;
-import com.perlib.wmbg.custom.Library;
 import com.perlib.wmbg.interfaces.OnDownloadComplete;
+import com.perlib.wmbg.misc.Library;
 
 import android.app.Activity;
 import android.content.Intent;

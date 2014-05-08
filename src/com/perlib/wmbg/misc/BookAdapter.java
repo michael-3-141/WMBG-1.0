@@ -1,5 +1,6 @@
-package com.perlib.wmbg.custom;
+package com.perlib.wmbg.misc;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -99,7 +100,23 @@ public class BookAdapter extends BaseAdapter implements Filterable {
 		text2.setText(displayAuthor);
 		text3.setText(displayLendedTo);
 		text4.setText(displayDateLended);
+
+		File file = null;
+		try{
+			file = new File(item.getThumbnailUrl());
+		}catch(Exception e){
+			
+		}
+		if(file != null)
+		{
+			if(file.exists()){
+				Picasso.with(cx).load(file).into(iv);
+				return v;
+			}
+		}
+		
 		Picasso.with(cx).load(item.getThumbnailUrl()).into(iv);
+		
 		return v;
 	}
 

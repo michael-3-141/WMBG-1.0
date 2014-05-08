@@ -14,7 +14,7 @@ import android.widget.ToggleButton;
 
 import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Settings;
-import com.perlib.wmbg.custom.Library;
+import com.perlib.wmbg.misc.Library;
 
 // TODO: Auto-generated Javadoc
 /**

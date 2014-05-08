@@ -1,4 +1,4 @@
-package com.perlib.wmbg.custom;
+package com.perlib.wmbg.misc;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -33,7 +33,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.perlib.wmbg.R;
-import com.perlib.wmbg.asyncTasks.DownloadBookInfo;
+import com.perlib.wmbg.asynctasks.DownloadBookInfoTask;
 import com.perlib.wmbg.book.Book;
 import com.perlib.wmbg.book.Settings;
 import com.perlib.wmbg.interfaces.OnDownloadComplete;
@@ -261,7 +261,7 @@ public class Library {
 	{
 		if(isbn.length() == 0){Toast.makeText(cx, cx.getString(R.string.InvalidISBN) , Toast.LENGTH_SHORT).show();return;}
 		if(!Library.isConnectedToInternet(cx)){Toast.makeText(cx, cx.getString(R.string.noConnection) , Toast.LENGTH_SHORT).show();return;}
-		DownloadBookInfo downloader = new DownloadBookInfo(listener);
+		DownloadBookInfoTask downloader = new DownloadBookInfoTask(listener);
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
 		{
 			downloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, isbn);

@@ -1,4 +1,4 @@
-package com.perlib.wmbg.asyncTasks;
+package com.perlib.wmbg.asynctasks;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +16,7 @@ import android.util.Log;
 /**
  * The Class GetContactNames.
  */
-public class GetContactNames extends AsyncTask<Void, String, HashMap<Integer, String>> {
+public class GetContactNamesTask extends AsyncTask<Void, String, HashMap<Integer, String>> {
 
 	/** The listener. */
 	private OnContactLoadingComplete listener;
@@ -30,7 +30,7 @@ public class GetContactNames extends AsyncTask<Void, String, HashMap<Integer, St
 	 * @param listener the listener
 	 * @param cr the cr
 	 */
-	public GetContactNames(OnContactLoadingComplete listener, ContentResolver cr) {
+	public GetContactNamesTask(OnContactLoadingComplete listener, ContentResolver cr) {
 		super();
 		this.listener = listener;
 		this.cr = cr;

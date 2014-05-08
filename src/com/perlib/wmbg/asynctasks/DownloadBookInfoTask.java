@@ -1,4 +1,4 @@
-package com.perlib.wmbg.asyncTasks;
+package com.perlib.wmbg.asynctasks;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -18,7 +18,7 @@ import com.perlib.wmbg.interfaces.OnDownloadComplete;
 /**
  * AsyncTask to download a book from Google Books.
  */
-public class DownloadBookInfo extends AsyncTask<String, Void, Book> {
+public class DownloadBookInfoTask extends AsyncTask<String, Void, Book> {
 
 	/** The listener. */
 	private OnDownloadComplete listener;
@@ -28,7 +28,7 @@ public class DownloadBookInfo extends AsyncTask<String, Void, Book> {
 	 *
 	 * @param listener the listener
 	 */
-	public DownloadBookInfo(OnDownloadComplete listener) {
+	public DownloadBookInfoTask(OnDownloadComplete listener) {
 		this.listener = listener;
 	}
 

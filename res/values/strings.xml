@@ -55,4 +55,6 @@
    <string name="ok">OK</string>
    <string name="dateLendedDisplay">Lended On: </string>
    <string name="search">Search</string>
+   <string name="takePicture">Take a Picture</string>
+   <string name="url">Image Url&#8230;</string>
 </resources>

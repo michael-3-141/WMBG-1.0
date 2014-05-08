@@ -1,4 +1,4 @@
-package com.perlib.wmbg.asyncTasks;
+package com.perlib.wmbg.asynctasks;
 
 import com.perlib.wmbg.interfaces.OnEmailLoadingListener;
 
@@ -11,7 +11,7 @@ import android.provider.ContactsContract;
 /**
  * The Class GetContactEmail.
  */
-public class GetContactEmail extends AsyncTask<Integer, String, String> {
+public class GetContactEmailTask extends AsyncTask<Integer, String, String> {
 
 	/** The cr. */
 	ContentResolver cr;
@@ -26,7 +26,7 @@ public class GetContactEmail extends AsyncTask<Integer, String, String> {
 	 * @param cr the cr
 	 * @param listener the listener
 	 */
-	public GetContactEmail(ContentResolver cr, OnEmailLoadingListener listener) {
+	public GetContactEmailTask(ContentResolver cr, OnEmailLoadingListener listener) {
 		super();
 		this.cr = cr;
 		this.listener = listener;

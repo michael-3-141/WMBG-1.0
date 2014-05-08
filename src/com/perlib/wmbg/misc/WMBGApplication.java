@@ -1,4 +1,4 @@
-package com.perlib.wmbg.custom;
+package com.perlib.wmbg.misc;
 
 import android.app.Application;
 

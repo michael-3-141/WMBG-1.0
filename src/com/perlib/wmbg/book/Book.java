@@ -28,6 +28,8 @@ public class Book implements Parcelable {
 	/** The url of a thumbnail image of the book. */
 	@Expose private String thumbnailUrl;
 	
+	//@Expose private boolean isLocal;
+	
 	/**
 	 * Instantiates a new book.
 	 *
@@ -39,7 +41,16 @@ public class Book implements Parcelable {
 		this.email = email;
 		this.dateLended = dateLended;
 		this.thumbnailUrl = thumbnailUrl;
+		//this.isLocal = isLocal;
 	}
+
+	/*public boolean isLocal() {
+		return isLocal;
+	}
+
+	public void setLocal(boolean isLocal) {
+		this.isLocal = isLocal;
+	}*/
 
 	/**
 	 * Instantiates a new book.
@@ -78,6 +89,7 @@ public class Book implements Parcelable {
 		this.email = dest.readString();
 		this.dateLended = dest.readLong();
 		this.thumbnailUrl = dest.readString();
+		//this.isLocal = dest.readByte() != 0;
 	}
 
 	/**
@@ -155,7 +167,7 @@ public class Book implements Parcelable {
 		dest.writeString(this.email);
 		dest.writeLong(this.dateLended);
 		dest.writeString(this.thumbnailUrl);
-		
+		//dest.writeByte((byte) (this.isLocal ? 1 : 0));
 	}
 	
 	/** The Constant CREATOR. */

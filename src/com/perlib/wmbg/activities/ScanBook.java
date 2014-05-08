@@ -19,52 +19,30 @@ import android.widget.TextView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.perlib.wmbg.R;
 import com.perlib.wmbg.book.Book;
-import com.perlib.wmbg.custom.Library;
+import com.perlib.wmbg.misc.Library;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class ScanBook.
+ * The scan book activity. Gets the info from main menu and displays several options for the user to do with the book.
  */
 public class ScanBook extends ActionBarActivity {
 
-	/** The tv book name. */
+	
 	TextView tvBookName;
-	
-	/** The tv book author. */
 	TextView tvBookAuthor;
-	
-	/** The btn add book. */
 	Button btnAddBook;
-	
-	/** The btn return book. */
 	Button btnReturnBook;
-	
-	/** The btn edit book. */
 	Button btnEditBook;
 	
-	/** The items. */
+	
 	List<Book> items = new ArrayList<Book>();
-	
-	/** The matched items. */
 	List<Book> matchedItems = new ArrayList<Book>();
-	
-	/** The matched items pos. */
 	List<Integer> matchedItemsPos = new ArrayList<Integer>();
-	
-	/** The matched lended items. */
 	List<Book> matchedLendedItems = new ArrayList<Book>();
-	
-	/** The matched lended items pos. */
 	List<Integer> matchedLendedItemsPos = new ArrayList<Integer>();
 	
-	/** The result. */
 	Book result = new Book();
 	
-	/**
-	 *  Called when the activity is first created.
-	 *
-	 * @param savedInstanceState the saved instance state
-	 */
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -102,6 +80,7 @@ public class ScanBook extends ActionBarActivity {
 				j++;
 			}
 		}
+		
 		if(matchedItems.size() == 0)
 		{
 			btnReturnBook.setVisibility(View.GONE);
@@ -147,8 +126,7 @@ public class ScanBook extends ActionBarActivity {
 				Intent addBook = new Intent(getApplicationContext(), AddBook.class);
 				addBook.putParcelableArrayListExtra("items", (ArrayList<? extends Parcelable>) items);
 				addBook.putExtra("mode", AddBook.MODE_AUTO);
-				addBook.putExtra("name", result.getName());
-				addBook.putExtra("author", result.getAuthor());
+				addBook.putExtra("book", result);
 				startActivity(addBook);
 			}
 		});
@@ -249,9 +227,6 @@ public class ScanBook extends ActionBarActivity {
 		});
 	}
 	
-	/* (non-Javadoc)
-	 * @see android.support.v4.app.FragmentActivity#onResume()
-	 */
 	@Override
 	public void onResume()
 	{
@@ -259,9 +234,6 @@ public class ScanBook extends ActionBarActivity {
 		items = Library.loadData();
 	}
 	
-	/* (non-Javadoc)
-	 * @see android.support.v4.app.FragmentActivity#onStart()
-	 */
 	@Override
 	public void onStart()
 	{
@@ -269,9 +241,6 @@ public class ScanBook extends ActionBarActivity {
 		EasyTracker.getInstance(this).activityStart(this);
 	}
 	
-	/* (non-Javadoc)
-	 * @see android.support.v7.app.ActionBarActivity#onStop()
-	 */
 	@Override
 	public void onStop()
 	{
